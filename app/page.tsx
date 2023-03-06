@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 const Home = () => (
-  <div className="w-full  h-screen flex flex-col px-6 text-gray-100 items-center justify-center">
+  <div className="w-full h-full flex flex-col px-6 text-gray-100 items-center justify-center">
     <h1 className="text-4xl font-semibold mb-5">ChatGPT</h1>
 
     <div className="md:flex text-center gap-3.5 md:max-w-2xl lg:max-w-3xl w-full">
