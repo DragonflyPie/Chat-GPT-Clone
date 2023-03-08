@@ -9,9 +9,10 @@ module.exports = {
     extend: {
       colors: {
         background: "#343541",
-        sidebar: "#202123",
+        dark_gray: "#202123",
         green: "#10a37f",
         dark_green: "#1a7f64",
+        gray_hover: "#2A2B32",
       },
     },
   },
