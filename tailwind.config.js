@@ -13,6 +13,7 @@ module.exports = {
         green: "#10a37f",
         dark_green: "#1a7f64",
         gray_hover: "#2A2B32",
+        gray_light: "#40414f",
       },
     },
   },
