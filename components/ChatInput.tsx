@@ -15,7 +15,7 @@ const ChatInput = ({ chatId }: ChatInputProps) => {
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const model = "davinci";
+  const model = "text-davinci-003";
 
   const { data: session } = useSession();
 
