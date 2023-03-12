@@ -1,22 +1,72 @@
 "use client";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { useSession } from "next-auth/react";
 import React, { useEffect, useRef, useState } from "react";
-import Airplane from "./icons/AirplaneIcon";
+import { db } from "../firebase";
+import { Message } from "../types";
+// import Airplane from "./icons/AirplaneIcon";
 
 interface ChatInputProps {
-  id: string;
+  chatId: string;
 }
 
-const ChatInput = ({ id }: ChatInputProps) => {
+const ChatInput = ({ chatId }: ChatInputProps) => {
   const [value, setValue] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const model = "davinci";
+
+  const { data: session } = useSession();
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!value) {
-      return;
-    }
-    alert(value);
+    if (!value) return;
+
+    const question = value.trim();
+
+    setValue("");
+
+    const message: Message = {
+      text: question,
+      createdAt: serverTimestamp(),
+      user: {
+        _id: session?.user?.email!,
+        name: session?.user?.name!,
+        avatar:
+          session?.user?.image! ||
+          `https://ui-avatars.com/api/?name=${session?.user?.name!}`,
+      },
+    };
+
+    await addDoc(
+      collection(
+        db,
+        "users",
+        session?.user?.email!,
+        "chats",
+        chatId,
+        "messages"
+      ),
+      message
+    );
+
+    await fetch("/api/askQuestion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text: question,
+        chatId,
+        model,
+        session,
+      }),
+    }).then(() => {
+      setLoading(false);
+    });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -45,16 +95,23 @@ const ChatInput = ({ id }: ChatInputProps) => {
             tabIndex={0}
             onChange={handleChange}
             className="bg-transparent resize-none w-full overflow-y-hidden h-6 max-h-52 outline-none pl-2 pr-4"
-          >
-            {value}
-          </textarea>
+            value={value}
+          />
 
           <button
             type="submit"
             className="hover:bg-dark_gray p-1 rounded-md disabled:hover:bg-transparent"
             disabled={!value}
           >
-            <PaperAirplaneIcon className="h-4 w-4 -rotate-45" />
+            {loading ? (
+              <div>
+                <span>.</span>
+                <span className="animate-param">.</span>
+                <span className="animate-param2">.</span>
+              </div>
+            ) : (
+              <PaperAirplaneIcon className="h-4 w-4 -rotate-45" />
+            )}
           </button>
         </div>
       </form>

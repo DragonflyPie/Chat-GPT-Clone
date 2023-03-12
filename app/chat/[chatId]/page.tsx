@@ -13,7 +13,7 @@ const ChatPage = ({ params: { chatId } }: ChatPageProps) => {
     <div className="flex flex-col overflow-hidden h-full">
       {chatId}
       <ChatMessages id={chatId} />
-      <ChatInput id={chatId} />
+      <ChatInput chatId={chatId} />
     </div>
   );
 };
