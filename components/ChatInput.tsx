@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { db } from "../firebase";
 import { Message } from "../types";
 // import Airplane from "./icons/AirplaneIcon";
+import useSWR from "swr";
 
 interface ChatInputProps {
   chatId: string;
@@ -15,7 +16,9 @@ const ChatInput = ({ chatId }: ChatInputProps) => {
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const model = "text-davinci-003";
+  const { data: model, mutate: setModel } = useSWR("model", {
+    fallbackData: "text-davinci-003",
+  });
 
   const { data: session } = useSession();
 
