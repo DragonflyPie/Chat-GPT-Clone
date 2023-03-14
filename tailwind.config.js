@@ -14,6 +14,7 @@ module.exports = {
         dark_green: "#1a7f64",
         gray_hover: "#2A2B32",
         gray_light: "#40414f",
+        gray_light_message: "#444654",
       },
       keyframes: {
         flicker: {

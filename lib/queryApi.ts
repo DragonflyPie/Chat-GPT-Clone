@@ -7,7 +7,7 @@ const query = async ({ text, model }: QueryProps) => {
       model,
       prompt: text,
       temperature: 0.5,
-      max_tokens: 20,
+      max_tokens: 500,
     })
     .then((res) => res.data.choices[0].text)
     .catch(

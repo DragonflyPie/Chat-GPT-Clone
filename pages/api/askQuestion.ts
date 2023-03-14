@@ -39,9 +39,9 @@ export default async function handler(
     text: response || "Chat GPT was unable to respond",
     createdAt: admin.firestore.Timestamp.now(),
     user: {
-      _id: "Chat GPT",
-      name: "Chat GPT",
-      avatar: "gpt",
+      _id: "chatGPT",
+      name: "chatGPT",
+      avatar: "/chatgpt-icon.png",
     },
   };
 

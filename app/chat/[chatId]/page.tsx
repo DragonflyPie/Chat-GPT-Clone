@@ -11,7 +11,6 @@ interface ChatPageProps {
 const ChatPage = ({ params: { chatId } }: ChatPageProps) => {
   return (
     <div className="flex flex-col overflow-hidden h-full">
-      {chatId}
       <ChatMessages id={chatId} />
       <ChatInput chatId={chatId} />
     </div>

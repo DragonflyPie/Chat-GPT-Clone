@@ -36,7 +36,7 @@ const ChatInput = ({ chatId }: ChatInputProps) => {
         _id: session?.user?.email!,
         name: session?.user?.name!,
         avatar:
-          session?.user?.image! ||
+          session?.user?.image ||
           `https://ui-avatars.com/api/?name=${session?.user?.name!}`,
       },
     };
