@@ -28,6 +28,7 @@ const ChatInput = ({ chatId }: ChatInputProps) => {
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!value) return;
+    if (loading) return;
 
     setLoading(true);
 
