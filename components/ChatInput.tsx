@@ -2,7 +2,7 @@
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useSession } from "next-auth/react";
-import React, { FormEvent, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { db } from "../firebase";
 import { Message } from "../types";
 // import Airplane from "./icons/AirplaneIcon";
@@ -28,6 +28,8 @@ const ChatInput = ({ chatId }: ChatInputProps) => {
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!value) return;
+
+    setLoading(true);
 
     const question = value.trim();
 
@@ -77,6 +79,13 @@ const ChatInput = ({ chatId }: ChatInputProps) => {
     setValue(e.target.value);
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && e.shiftKey === false && e.ctrlKey === false) {
+      e.preventDefault();
+      formRef.current?.requestSubmit();
+    }
+  };
+
   useEffect(() => {
     if (textareaRef && textareaRef.current) {
       textareaRef.current.style.height = "0px";
@@ -84,13 +93,6 @@ const ChatInput = ({ chatId }: ChatInputProps) => {
       textareaRef.current.style.height = scrollHeight + "px";
     }
   }, [value]);
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && e.shiftKey === false && e.ctrlKey === false) {
-      e.preventDefault();
-      formRef.current?.requestSubmit();
-    }
-  };
 
   return (
     <div className="w-full p-5 text-base flex justify-center">
@@ -119,8 +121,12 @@ const ChatInput = ({ chatId }: ChatInputProps) => {
             {loading ? (
               <div>
                 <span>.</span>
-                <span className="animate-param">.</span>
-                <span className="animate-param2">.</span>
+                <span className="animate-[flicker_2s_steps(1,start)_infinite]">
+                  .
+                </span>
+                <span className="animate-[flickerAlt_2s_steps(1,start)_infinite]">
+                  .
+                </span>
               </div>
             ) : (
               <PaperAirplaneIcon className="h-4 w-4 -rotate-45" />

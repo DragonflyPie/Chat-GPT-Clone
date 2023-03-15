@@ -19,24 +19,18 @@ module.exports = {
       keyframes: {
         flicker: {
           "0%, 100%": {
-            opacity: 0,
+            opacity: 1,
           },
-          "33%": { opacity: 1 },
+          "33%": { opacity: 0 },
         },
-        flicker2: {
+        flickerAlt: {
           "0%, 100%": {
-            opacity: 0,
+            opacity: 1,
           },
-          "66%": { opacity: 1 },
+          "66%": { opacity: 0 },
         },
       },
-      transitionTimingFunction: {
-        sharp: "cubic-bezier(.25,.1,.25,1)",
-      },
-      animation: {
-        param: "flicker 2s infinite",
-        param2: "flicker2 2s infinite",
-      },
+      animation: {},
     },
   },
   plugins: [],
