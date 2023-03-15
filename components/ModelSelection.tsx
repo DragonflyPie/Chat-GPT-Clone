@@ -4,7 +4,7 @@ import Select from "react-select";
 const fetchModels = () => fetch("/api/getModels").then((res) => res.json());
 
 const ModelSelection = () => {
-  const { data, isLoading, error } = useSWR("models", fetchModels);
+  const { data, isLoading } = useSWR("models", fetchModels);
   const { data: model, mutate: setModel } = useSWR("model", {
     fallbackData: "text-davinci-003",
   });
@@ -12,10 +12,10 @@ const ModelSelection = () => {
   return (
     <div>
       <Select
+        instanceId={"model-select"}
         options={data?.modelOptions}
         className="z-20 outline-none focus:ring-transparent border-none active:border-none active:ring-0 active:outline-none"
         isSearchable
-        isLoading={isLoading}
         menuPosition="fixed"
         styles={{
           menuList: (baseStyles) => ({
@@ -49,9 +49,6 @@ const ModelSelection = () => {
         defaultValue={model}
         onChange={(e) => setModel(e.value)}
       />
-      {/* <select>
-        <oop
-      </select> */}
     </div>
   );
 };

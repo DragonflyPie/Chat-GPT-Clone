@@ -5,7 +5,14 @@ import TrashIcon from "./icons/TrashIcon";
 import ChatIcon from "./icons/ChatIcon";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { collection, deleteDoc, doc, getDoc, query } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import {
   useCollection,
   useDocument,
@@ -37,7 +44,10 @@ const ChatRow = ({ id }: ChatRowProps) => {
   };
 
   const [messages] = useCollection(
-    collection(db, "users", session?.user?.email!, "chats", id, "messages")
+    query(
+      collection(db, "users", session?.user?.email!, "chats", id, "messages"),
+      orderBy("createdAt", "asc")
+    )
   );
 
   return (
@@ -47,8 +57,6 @@ const ChatRow = ({ id }: ChatRowProps) => {
         active ? "bg-background hover:bg-background" : "hover:bg-gray_hover"
       }`}
     >
-      {/* <ChatBubbleLeftIcon className="h-5 w-5" /> */}
-
       <span className="">
         <ChatIcon />
       </span>
@@ -65,7 +73,6 @@ const ChatRow = ({ id }: ChatRowProps) => {
         ></div>
       </span>
       <span className="text-gray-300 inline-flex items-center">
-        {/* <TrashIcon className="w-5 h-5 hover:text-white" /> */}
         <span className="hover:text-white" onClick={deleteChat}>
           <TrashIcon />
         </span>

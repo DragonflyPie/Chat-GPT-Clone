@@ -2,7 +2,7 @@
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { db } from "../firebase";
 import { Message } from "../types";
 // import Airplane from "./icons/AirplaneIcon";
@@ -16,13 +16,14 @@ const ChatInput = ({ chatId }: ChatInputProps) => {
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { data: model, mutate: setModel } = useSWR("model", {
+  const { data: model } = useSWR("model", {
     fallbackData: "text-davinci-003",
   });
 
   const { data: session } = useSession();
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,9 +85,17 @@ const ChatInput = ({ chatId }: ChatInputProps) => {
     }
   }, [value]);
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && e.shiftKey === false && e.ctrlKey === false) {
+      e.preventDefault();
+      formRef.current?.requestSubmit();
+    }
+  };
+
   return (
     <div className="w-full p-5 text-base flex justify-center">
       <form
+        ref={formRef}
         className=" gap-1 border-l-gray-900/50 text-white bg-gray_light rounded-md flex shadow-[0_0_15px_rgba(0,0,0,0.10)] md:max-w-3xl w-full "
         onSubmit={sendMessage}
       >
@@ -96,6 +105,7 @@ const ChatInput = ({ chatId }: ChatInputProps) => {
             ref={textareaRef}
             rows={1}
             tabIndex={0}
+            onKeyDown={handleKeyPress}
             onChange={handleChange}
             className="bg-transparent resize-none w-full overflow-y-hidden h-6 max-h-52 outline-none pl-2 pr-4"
             value={value}
