@@ -1,9 +1,12 @@
 import { getServerSession } from "next-auth";
+import React from "react";
 import Login from "../components/Login";
+import Navbar from "../components/Navbar";
 import { SessionProvider } from "../components/SessionProvider";
 import Sidebar from "../components/Sidebar";
 import { authOptions } from "../pages/api/auth/[...nextauth]";
 import "../styles/globals.css";
+import SidebarProvider from "../context/sidebarContext";
 
 export const metadata = {
   title: "ChatGPT Messenger",
@@ -19,19 +22,28 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body>
-        <SessionProvider session={session}>
-          {!session ? (
-            <Login />
-          ) : (
-            <div className="flex h-screen text-sm">
-              <Sidebar />
+      <body className="text-small h-screen">
+        <SidebarProvider>
+          <SessionProvider session={session}>
+            {!session ? (
+              <Login />
+            ) : (
+              <React.Fragment>
+                <Navbar />
+                <div className="flex">
+                  <div className="hidden md:flex">
+                    <Sidebar />
+                  </div>
 
-              {/* Client Provider - notifications */}
-              <div className="bg-background flex-1">{children}</div>
-            </div>
-          )}
-        </SessionProvider>
+                  {/* Client Provider - notifications */}
+                  <div className="bg-background h-[calc(100vh-2.5rem)] md:h-screen flex-1">
+                    {children}
+                  </div>
+                </div>
+              </React.Fragment>
+            )}
+          </SessionProvider>
+        </SidebarProvider>
       </body>
     </html>
   );

@@ -14,7 +14,7 @@ import ChatLoader from "./ChatLoader";
 const Sidebar = () => {
   const { data: session } = useSession();
 
-  const [chats, loading, error] = useCollection(
+  const [chats, loading] = useCollection(
     session &&
       query(
         collection(db, "users", session.user?.email!, "chats"),
@@ -23,7 +23,7 @@ const Sidebar = () => {
   );
 
   return (
-    <nav className="bg-dark_gray flex flex-col h-screen max-w-xs p-2 overflow-y-scrol md:w-[260px]">
+    <nav className="bg-dark_gray flex flex-col h-full max-w-xs p-2 overflow-y-scrol md:w-[260px] ">
       <div className="flex-1">
         <NewChat />
 

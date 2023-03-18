@@ -1,6 +1,6 @@
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import TrashIcon from "./icons/TrashIcon";
 import ChatIcon from "./icons/ChatIcon";
 import { usePathname, useRouter } from "next/navigation";
@@ -19,6 +19,7 @@ import {
   useDocumentOnce,
 } from "react-firebase-hooks/firestore";
 import { db } from "../firebase";
+import { SidebarContext } from "../context/sidebarContext";
 
 interface ChatRowProps {
   id: string;
