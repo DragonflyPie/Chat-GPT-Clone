@@ -7,6 +7,7 @@ import Sidebar from "../components/Sidebar";
 import { authOptions } from "../pages/api/auth/[...nextauth]";
 import "../styles/globals.css";
 import SidebarProvider from "../context/sidebarContext";
+import ChatInput from "../components/ChatInput";
 
 export const metadata = {
   title: "ChatGPT Messenger",
@@ -35,7 +36,6 @@ export default async function RootLayout({
                     <Sidebar />
                   </div>
 
-                  {/* Client Provider - notifications */}
                   <div className="bg-background h-[calc(100vh-2.5rem)] md:h-screen flex-1">
                     {children}
                   </div>
