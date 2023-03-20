@@ -7,11 +7,11 @@ import {
 import ChatInput from "../components/ChatInput";
 
 const Home = () => (
-  <div className="w-full h-full flex flex-col px-6 text-gray-100 items-center justify-center">
-    <div className="md:flex md:flex-col md:grow justify-center items-center">
-      <h1 className="text-4xl font-semibold mb-5">ChatGPT</h1>
+  <div className="w-full flex flex-col px-6 text-gray-100 items-center justify-center">
+    <div className="flex flex-col md:grow justify-center items-center">
+      <h1 className="text-4xl font-semibold pb-10 pt-20 md:pt-10">ChatGPT</h1>
       <div className="md:flex text-center gap-3.5 md:max-w-2xl lg:max-w-3xl w-full">
-        <div className="flex flex-col items-center w-full h-full">
+        <div className="flex flex-col items-center w-full">
           <div className="flex md:flex-col items-center mb-5 justify-center gap-2">
             <SunIcon className="h-7 w-7" />
             <h2>Examples</h2>
@@ -47,7 +47,7 @@ const Home = () => (
       </div>
     </div>
 
-    <ChatInput />
+    {/* <ChatInput /> */}
   </div>
 );
 

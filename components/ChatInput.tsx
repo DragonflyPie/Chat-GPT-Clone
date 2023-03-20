@@ -7,13 +7,13 @@ import { db } from "../firebase";
 import { Message } from "../types";
 // import Airplane from "./icons/AirplaneIcon";
 import useSWR from "swr";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface ChatInputProps {
   chatId?: string;
 }
 
-const ChatInput = ({ chatId }: ChatInputProps) => {
+const ChatInput = () => {
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -21,6 +21,10 @@ const ChatInput = ({ chatId }: ChatInputProps) => {
   const { data: model } = useSWR("model", {
     fallbackData: "text-davinci-003",
   });
+
+  const path = usePathname();
+
+  let chatId = path ? path.split("/").slice(-1)[0] : null;
 
   const { data: session } = useSession();
 
@@ -50,10 +54,7 @@ const ChatInput = ({ chatId }: ChatInputProps) => {
       },
     };
 
-    console.log(chatId);
-
     if (!chatId) {
-      console.log(chatId);
       const doc = await addDoc(
         collection(db, "users", session?.user?.email!, "chats"),
         {
@@ -62,7 +63,6 @@ const ChatInput = ({ chatId }: ChatInputProps) => {
         }
       );
       chatId = doc.id;
-      console.log(chatId);
 
       router.push(`/chat/${chatId}`);
     }
@@ -115,7 +115,7 @@ const ChatInput = ({ chatId }: ChatInputProps) => {
   }, [value]);
 
   return (
-    <div className="w-full p-5 text-base flex justify-center ">
+    <div className="w-full p-5 text-base flex justify-center bg-background">
       <form
         ref={formRef}
         className=" gap-1 border-l-gray-900/50 text-white bg-gray_light rounded-md flex shadow-[0_0_15px_rgba(0,0,0,0.10)] md:max-w-3xl w-full "
