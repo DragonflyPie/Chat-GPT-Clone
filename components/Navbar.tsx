@@ -5,6 +5,12 @@ import Sidebar from "./Sidebar";
 import MenuIcon from "./icons/MenuIcon";
 import CloseIcon from "./icons/CloseIcon";
 import { SidebarContext } from "../context/sidebarContext";
+import { usePathname } from "next/navigation";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { collection, query } from "firebase/firestore";
+import { db } from "../firebase";
+import { useSession } from "next-auth/react";
+import NewChat from "./NewChat";
 
 const Navbar = () => {
   // const [showSidebar, setShowSidebar] = useState(false);
@@ -18,16 +24,16 @@ const Navbar = () => {
   return (
     <React.Fragment>
       <nav
-        className="sticky top-0 z-10 flex h-10 md:hidden bg-background text-text_darker border-b border-white/20 px-3
+        className="sticky top-0 z-10 flex h-10 md:hidden bg-background justify-between text-text_darker border-b border-white/20
       "
       >
         <button
           onClick={displaySidebar}
-          className="hover:text-white inline-flex justify-center items-center"
+          className="hover:text-white inline-flex justify-center items-center px-3"
         >
           <MenuIcon />
         </button>
-        <h1>Create new chat</h1>
+        <NewChat mobile={true} />
       </nav>
 
       <div

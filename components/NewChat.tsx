@@ -7,7 +7,11 @@ import { useRouter } from "next/navigation";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
 
-const NewChat = () => {
+interface NewChatProps {
+  mobile?: boolean;
+}
+
+const NewChat = ({ mobile }: NewChatProps) => {
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -26,15 +30,19 @@ const NewChat = () => {
   return (
     <a
       onClick={createNewChat}
-      className="flex items-center justify-start rounded-md border-white/20 border hover:bg-gray-500/10 transition-colors duration-200 cursor-pointer text-white p-3 gap-3"
+      className={`flex items-center cursor-pointer p-3 ${
+        mobile
+          ? " "
+          : "justify-start rounded-md border-white/20 border hover:bg-gray-500/10 transition-colors duration-200 cursor-pointer text-white gap-3"
+      }`}
     >
       <PlusIcon
-        className="h-4 w-4"
+        className={mobile ? "h-5 w-5" : "h-4 w-4"}
         strokeWidth={2}
         strokeLinecap={"round"}
         strokeLinejoin={"round"}
       />
-      New chat
+      {!mobile && "New chat"}
     </a>
   );
 };
