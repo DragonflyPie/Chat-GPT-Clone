@@ -1,21 +1,19 @@
 "use client";
+
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+
 import { useSession } from "next-auth/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { db } from "../firebase";
-import { Message } from "../types";
-// import Airplane from "./icons/AirplaneIcon";
+import { IMessage } from "../types";
 import useSWR from "swr";
 import { usePathname, useRouter } from "next/navigation";
-
-interface ChatInputProps {
-  chatId?: string;
-}
+import { LoadingContext } from "../context/loadingContext";
 
 const ChatInput = () => {
   const [value, setValue] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { loading, switchLoading } = useContext(LoadingContext);
 
   const router = useRouter();
   const { data: model } = useSWR("model", {
@@ -36,15 +34,26 @@ const ChatInput = () => {
     if (!value) return;
     if (loading) return;
 
-    setLoading(true);
+    switchLoading(true);
 
     const question = value.trim();
 
-    setValue("");
+    // await fetch("/api/addQuestion", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     text: question,
+    //     chatId,
+    //     session,
+    //   }),
+    // });
 
-    const message: Message = {
+    const message: IMessage = {
       text: question,
       createdAt: serverTimestamp(),
+      read: true,
       user: {
         _id: session?.user?.email!,
         name: session?.user?.name!,
@@ -53,6 +62,19 @@ const ChatInput = () => {
           `https://ui-avatars.com/api/?name=${session?.user?.name!}`,
       },
     };
+
+    const blankResponse: IMessage = {
+      text: "",
+      createdAt: serverTimestamp(),
+      read: false,
+      user: {
+        _id: "chatGPT",
+        name: "chatGPT",
+        avatar: "/chatgpt-icon.png",
+      },
+    };
+
+    setValue("");
 
     if (!chatId) {
       const doc = await addDoc(
@@ -79,6 +101,18 @@ const ChatInput = () => {
       message
     );
 
+    const responseMessage = await addDoc(
+      collection(
+        db,
+        "users",
+        session?.user?.email!,
+        "chats",
+        chatId,
+        "messages"
+      ),
+      blankResponse
+    );
+
     await fetch("/api/askQuestion", {
       method: "POST",
       headers: {
@@ -89,10 +123,11 @@ const ChatInput = () => {
         chatId,
         model,
         session,
+        messageId: responseMessage.id,
       }),
-    }).then(() => {
-      setLoading(false);
     });
+
+    switchLoading(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

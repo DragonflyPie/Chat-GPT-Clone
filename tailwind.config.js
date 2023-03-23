@@ -55,6 +55,11 @@ module.exports = {
             opacity: 1,
           },
         },
+        blink: {
+          to: {
+            visibility: "hidden",
+          },
+        },
       },
       animation: {
         slide: "slide 400ms ease-out",

@@ -1,15 +1,11 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Sidebar from "./Sidebar";
 import MenuIcon from "./icons/MenuIcon";
 import CloseIcon from "./icons/CloseIcon";
 import { SidebarContext } from "../context/sidebarContext";
-import { usePathname } from "next/navigation";
-import { useCollection } from "react-firebase-hooks/firestore";
-import { collection, query } from "firebase/firestore";
-import { db } from "../firebase";
-import { useSession } from "next-auth/react";
+
 import NewChat from "./NewChat";
 
 const Navbar = () => {

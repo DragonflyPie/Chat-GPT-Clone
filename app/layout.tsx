@@ -8,6 +8,7 @@ import { authOptions } from "../pages/api/auth/[...nextauth]";
 import "../styles/globals.css";
 import SidebarProvider from "../context/sidebarContext";
 import ChatInput from "../components/ChatInput";
+import LoadingProvider from "../context/loadingContext";
 
 export const metadata = {
   title: "ChatGPT Messenger",
@@ -25,26 +26,28 @@ export default async function RootLayout({
     <html lang="en">
       <body className="text-small h-[calc(100vh - 2.5rem)] md:h-screen">
         <SidebarProvider>
-          <SessionProvider session={session}>
-            {!session ? (
-              <Login />
-            ) : (
-              <React.Fragment>
-                <Navbar />
-                <div className="flex h-full">
-                  <div className="hidden md:flex">
-                    <Sidebar />
-                  </div>
-                  <div className="h-full w-full flex flex-col">
-                    <div className="bg-background min-h-[calc(100vh-7.5rem)]  flex-1">
-                      {children}
+          <LoadingProvider>
+            <SessionProvider session={session}>
+              {!session ? (
+                <Login />
+              ) : (
+                <React.Fragment>
+                  <Navbar />
+                  <div className="flex h-full">
+                    <div className="hidden md:flex">
+                      <Sidebar />
                     </div>
-                    <ChatInput />
+                    <div className="h-full w-full flex flex-col">
+                      <div className="bg-background min-h-[calc(100vh-7.5rem)]  flex-1">
+                        {children}
+                      </div>
+                      <ChatInput />
+                    </div>
                   </div>
-                </div>
-              </React.Fragment>
-            )}
-          </SessionProvider>
+                </React.Fragment>
+              )}
+            </SessionProvider>
+          </LoadingProvider>
         </SidebarProvider>
       </body>
     </html>

@@ -1,8 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import query from "../../lib/queryApi";
-import { Message } from "../../types";
-import admin from "firebase-admin";
 import { adminDb } from "../../firebaseAdmin";
 import { Session } from "next-auth";
 
@@ -15,13 +13,14 @@ interface RequestProps {
   chatId: string;
   model: string;
   session: Session;
+  messageId: string;
 }
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const { text, chatId, model, session }: RequestProps = req.body;
+  const { text, chatId, model, session, messageId }: RequestProps = req.body;
 
   if (!text) {
     res.status(400).json({ answer: "Please provide question" });
@@ -35,23 +34,14 @@ export default async function handler(
 
   const response = await query({ text, model });
 
-  const responseMessage: Message = {
-    text: response || "Chat GPT was unable to respond",
-    createdAt: admin.firestore.Timestamp.now(),
-    user: {
-      _id: "chatGPT",
-      name: "chatGPT",
-      avatar: "/chatgpt-icon.png",
-    },
-  };
-
   await adminDb
     .collection("users")
     .doc(session.user?.email!)
     .collection("chats")
     .doc(chatId)
     .collection("messages")
-    .add(responseMessage);
+    .doc(messageId)
+    .update({ text: response || "Chat GPT was unable to respond" });
 
-  res.status(200).json({ answer: responseMessage.text });
+  res.status(200).json({ answer: "Ok" });
 }

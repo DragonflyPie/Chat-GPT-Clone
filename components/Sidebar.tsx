@@ -2,7 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
-import React from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import NewChat from "./NewChat";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { collection, deleteDoc, orderBy, query } from "firebase/firestore";
@@ -10,6 +10,7 @@ import { db } from "../firebase";
 import ChatRow from "./ChatRow";
 import ModelSelection from "./ModelSelection";
 import ChatLoader from "./ChatLoader";
+import { SidebarContext } from "../context/sidebarContext";
 
 const Sidebar = () => {
   const { data: session } = useSession();

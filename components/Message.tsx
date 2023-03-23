@@ -1,16 +1,78 @@
 import { DocumentData } from "@firebase/firestore-types";
-import React from "react";
+import { doc, updateDoc } from "firebase/firestore";
+import { useSession } from "next-auth/react";
+import React, { useEffect, useRef, useState } from "react";
+import { db } from "../firebase";
 import OpenAi from "./icons/OpenAi";
 
 interface MessageProps {
   content: DocumentData;
+  isLast: boolean;
+  chatId: string;
+  messageId: string;
 }
 
-const Message = ({ content }: MessageProps) => {
+const Message = ({ content, isLast, chatId, messageId }: MessageProps) => {
+  const fullText = content.text;
+  const [text, setText] = useState("");
+  const [index, setIndex] = useState(0);
+  const { data: session } = useSession();
+
+  const messageRef = useRef<HTMLDivElement>(null);
   const chatGPT = content.user.name === "chatGPT";
+
+  useEffect(() => {
+    if (content.read || !fullText.length) return;
+
+    if (index < fullText.length) {
+      setTimeout(() => {
+        setText(text + fullText[index]);
+        setIndex(index + 1);
+      }, 35);
+    } else {
+      const docRef = doc(
+        db,
+        "users",
+        session?.user?.email!,
+        "chats",
+        chatId,
+        "messages",
+        messageId
+      );
+      updateDoc(docRef, { read: true });
+    }
+  }, [index, content, isLast]);
+  // useEffect(() => {
+  //   if (!isLast) {
+  //     setAnimate(false);
+  //     return;
+  //   }
+
+  //   if (index < fullText.length) {
+  //     setTimeout(() => {
+  //       setText(text + fullText[index]);
+  //       setIndex(index + 1);
+  //     }, 35);
+  //   } else {
+  //     setAnimate(false);
+  //   }
+  // }, [index, isLast, fullText]);
+
+  // useEffect(() => {
+  //   if (loading && chatGPT && isLast) {
+  //     setAnimate(true);
+  //   }
+  // }, [loading, chatGPT, isLast]);
+
+  useEffect(() => {
+    if (isLast) {
+      messageRef.current?.scrollIntoView();
+    }
+  }, [isLast, index]);
 
   return (
     <div
+      ref={messageRef}
       className={`w-full flex justify-center ${
         chatGPT && "bg-gray_light_message"
       }`}
@@ -23,11 +85,23 @@ const Message = ({ content }: MessageProps) => {
         ) : (
           <img
             src={content.user.avatar}
-            alt=""
+            alt="user image"
             className="h-[30px] w-[30px] rounded-sm"
           />
         )}
-        <p className="">{content.text}</p>
+
+        <div className="">
+          {content.read ? (
+            fullText
+          ) : (
+            <div>
+              {text}
+              <span className="inline animate-[blink_1s_steps(5,start)_infinite]">
+                &#9608;
+              </span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

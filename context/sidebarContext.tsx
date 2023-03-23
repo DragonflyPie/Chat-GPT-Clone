@@ -12,9 +12,7 @@ export const SidebarContext = createContext<SidebarContextProps>({
   showSidebar: false,
 });
 
-interface ProviderProps extends React.PropsWithChildren {}
-
-const Provider = ({ children }: ProviderProps) => {
+const Provider = ({ children }: React.PropsWithChildren) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const displaySidebar = () => {
     setShowSidebar(true);
