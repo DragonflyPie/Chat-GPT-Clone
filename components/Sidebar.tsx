@@ -10,10 +10,11 @@ import { db } from "../firebase";
 import ChatRow from "./ChatRow";
 import ModelSelection from "./ModelSelection";
 import ChatLoader from "./ChatLoader";
-import { SidebarContext } from "../context/sidebarContext";
 
 const Sidebar = () => {
   const { data: session } = useSession();
+
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   const [chats, loading] = useCollection(
     session &&
@@ -24,7 +25,10 @@ const Sidebar = () => {
   );
 
   return (
-    <nav className="bg-dark_gray flex flex-col h-full max-w-xs p-2 overflow-y-scrol md:w-[260px] ">
+    <nav
+      ref={sidebarRef}
+      className="bg-dark_gray flex flex-col h-full max-w-xs p-2 overflow-y-scrol md:w-[260px] "
+    >
       <div className="flex-1">
         <NewChat />
 
@@ -36,7 +40,11 @@ const Sidebar = () => {
         ) : (
           <div className="flex flex-col w-full gap-2">
             {chats?.docs.map((chat) => (
-              <ChatRow key={chat.id} id={chat.id} />
+              <ChatRow
+                key={chat.id}
+                id={chat.id}
+                name={chat.data().name || "New Chat"}
+              />
             ))}
           </div>
         )}

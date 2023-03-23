@@ -1,7 +1,14 @@
 "use client";
 
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 
 import { useSession } from "next-auth/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
@@ -128,6 +135,13 @@ const ChatInput = () => {
     });
 
     switchLoading(false);
+
+    // const docRef = doc(db, "users", session?.user?.email!, "chats", chatId);
+
+    // const chatSnap = await getDoc(docRef);
+    // if (!chatSnap.data().name) {
+    //   await updateDoc(docRef, { name: "12" });
+    // }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

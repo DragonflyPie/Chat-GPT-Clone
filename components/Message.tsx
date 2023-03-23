@@ -42,6 +42,7 @@ const Message = ({ content, isLast, chatId, messageId }: MessageProps) => {
       updateDoc(docRef, { read: true });
     }
   }, [index, content, isLast]);
+
   // useEffect(() => {
   //   if (!isLast) {
   //     setAnimate(false);

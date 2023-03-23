@@ -1,4 +1,3 @@
-import Blinker from "./Blinker";
 import OpenAi from "./icons/OpenAi";
 
 const MessageReplacement = () => {
@@ -8,7 +7,6 @@ const MessageReplacement = () => {
         <div className="h-[30px] w-[30px] min-w-[30px] bg-green flex items-center justify-center rounded-sm">
           <OpenAi />
         </div>
-        <Blinker />
       </div>
     </div>
   );
