@@ -12,7 +12,7 @@ interface ChatPageProps {
 }
 
 const ChatPage = ({ params: { chatId } }: ChatPageProps) => {
-  const { showSidebar, hideSidebar } = useContext(SidebarContext);
+  const { hideSidebar } = useContext(SidebarContext);
 
   useEffect(() => {
     if (hideSidebar !== undefined) {

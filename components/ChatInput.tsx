@@ -13,7 +13,7 @@ import { LoadingContext } from "../context/loadingContext";
 
 const ChatInput = () => {
   const [value, setValue] = useState("");
-  const { loading, switchLoading } = useContext(LoadingContext);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
   const { data: model } = useSWR("model", {
@@ -34,7 +34,7 @@ const ChatInput = () => {
     if (!value) return;
     if (loading) return;
 
-    switchLoading(true);
+    setLoading(true);
 
     const question = value.trim();
 
@@ -127,7 +127,7 @@ const ChatInput = () => {
       }),
     });
 
-    switchLoading(false);
+    setLoading(false);
 
     // const docRef = doc(db, "users", session?.user?.email!, "chats", chatId);
 

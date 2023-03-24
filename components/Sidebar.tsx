@@ -27,7 +27,7 @@ const Sidebar = () => {
   return (
     <nav
       ref={sidebarRef}
-      className="bg-dark_gray flex flex-col h-full md:min-h-screen max-w-xs p-2 overflow-y-scrol md:w-[260px] "
+      className="bg-dark_gray flex flex-col h-full max-w-xs p-2 overflow-y-scrol md:w-[260px] "
     >
       <div className="flex-1">
         <NewChat />

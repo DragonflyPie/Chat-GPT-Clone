@@ -44,7 +44,6 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
   }, [path]);
 
   const handler = () => {
-    console.log("click");
     setEdit(false);
   };
 
@@ -52,7 +51,6 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
   // useEffect(() => {
   //   const handleClick = (e: MouseEvent) => {
   //     // e.stopPropagation();
-  //     console.log("click");
   //     if (inputRef.current && !inputRef.current.contains(e.target as Node))
   //       setEdit(false);
   //   };

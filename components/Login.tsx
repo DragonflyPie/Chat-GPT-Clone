@@ -23,7 +23,7 @@ const Login = () => {
           <p>Explore as Guest</p>
           <button
             className="bg-green hover:bg-dark_green duration-150 transition-colors inline-flex border-transparent rounded border-1 py-3 px-2 leading-5 cursor-pointer"
-            onClick={() => signIn("google")}
+            onClick={() => signIn("credentials")}
           >
             Guest
           </button>

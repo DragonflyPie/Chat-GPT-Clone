@@ -9,6 +9,7 @@ import { SidebarContext } from "../context/sidebarContext";
 import NewChat from "./NewChat";
 
 const Navbar = () => {
+  console.log("navbar rendered");
   // const [showSidebar, setShowSidebar] = useState(false);
 
   // const toggleSidebar = (e: React.MouseEvent<HTMLButtonElement>) => {
