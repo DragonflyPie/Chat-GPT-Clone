@@ -1,6 +1,15 @@
 "use client";
 
-import { collection, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  updateDoc,
+} from "firebase/firestore";
 import { useSession } from "next-auth/react";
 
 import React, { useContext, useEffect, useRef } from "react";
@@ -25,6 +34,21 @@ const ChatMessages = ({ id }: ChatMessagesProps) => {
         orderBy("createdAt", "asc")
       )
   );
+
+  useEffect(() => {
+    if (!session) return;
+    const getName = async () => {
+      const docRef = doc(db, "users", session?.user?.email!, "chats", id);
+      const chatSnap = await getDoc(docRef);
+      const chatData = chatSnap.data();
+
+      if (chatData && !chatData.name && messages?.docs.length) {
+        const newName = messages.docs[0].data().text.trim().slice(0, 20);
+        await updateDoc(docRef, { name: newName });
+      }
+    };
+    getName();
+  }, [db, session, messages]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

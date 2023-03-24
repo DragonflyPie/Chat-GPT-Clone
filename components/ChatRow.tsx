@@ -34,33 +34,6 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
   const [active, setActive] = useState(false);
   const docRef = doc(db, "users", session?.user?.email!, "chats", id);
 
-  useEffect(() => {
-    const getName = async () => {
-      const chatSnap = await getDoc(docRef);
-      const chatData = chatSnap.data();
-
-      if (chatData && !chatData.name) {
-        const q = query(
-          collection(
-            db,
-            "users",
-            session?.user?.email!,
-            "chats",
-            id,
-            "messages"
-          ),
-          orderBy("createdAt", "asc"),
-          limit(1)
-        );
-        const querySnapshot = await getDocs(q);
-        if (!querySnapshot.docs.length) return;
-        const newName = querySnapshot.docs[0].data().text.trim();
-        await updateDoc(docRef, { name: newName });
-      }
-    };
-    getName();
-  }, [docRef, name]);
-
   const [edit, setEdit] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -134,7 +107,7 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
           />
         ) : (
           <React.Fragment>
-            <p className="text-ellipsis overflow-hidden break-all max-h-5 table-cell px-1">
+            <p className="text-ellipsis overflow-hidden break-all h-5 inline-flex capitalize  px-1">
               {name}
             </p>
             <div

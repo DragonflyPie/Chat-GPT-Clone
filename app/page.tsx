@@ -1,10 +1,5 @@
 import InfoBlock from "../components/InfoBlock";
-import {
-  SunIcon,
-  BoltIcon,
-  ExclamationTriangleIcon,
-} from "@heroicons/react/24/outline";
-import ChatInput from "../components/ChatInput";
+import { SunIcon } from "@heroicons/react/24/outline";
 
 const Home = () => (
   <div className="w-full flex flex-col px-6 text-gray-100 items-center justify-center">

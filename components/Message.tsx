@@ -92,7 +92,7 @@ const Message = ({ content, isLast, chatId, messageId }: MessageProps) => {
         )}
 
         <div className="">
-          {content.read ? (
+          {content.read || !isLast ? (
             fullText
           ) : (
             <div>
