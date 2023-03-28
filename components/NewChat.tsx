@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
+import useFirebaseChat from "../lib/useFirebaseChat";
 
 interface NewChatProps {
   mobile?: boolean;
@@ -14,22 +15,17 @@ interface NewChatProps {
 const NewChat = ({ mobile }: NewChatProps) => {
   const router = useRouter();
   const { data: session } = useSession();
+  const { createChat } = useFirebaseChat({ user: session?.user?.email });
 
-  const createNewChat = async () => {
-    const doc = await addDoc(
-      collection(db, "users", session?.user?.email!, "chats"),
-      {
-        userId: session?.user?.email!,
-        createdAt: serverTimestamp(),
-      }
-    );
+  const handleCreate = async () => {
+    const newId = await createChat();
 
-    router.push(`/chat/${doc.id}`);
+    router.push(`/chat/${newId}`);
   };
 
   return (
     <a
-      onClick={createNewChat}
+      onClick={handleCreate}
       className={`flex items-center cursor-pointer p-3 ${
         mobile
           ? " "

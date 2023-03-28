@@ -2,32 +2,28 @@
 
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import NewChat from "./NewChat";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { collection, deleteDoc, orderBy, query } from "firebase/firestore";
+import { collection, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
 import ChatRow from "./ChatRow";
 import ModelSelection from "./ModelSelection";
-import ChatLoader from "./ChatLoader";
+import Loader from "./Loader";
+import useSubscribeFirebase from "../lib/useSubscribeFirebase";
 
 const Sidebar = () => {
   const { data: session } = useSession();
+  const user = session?.user?.email;
 
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  const [chats, loading] = useCollection(
-    session &&
-      query(
-        collection(db, "users", session.user?.email!, "chats"),
-        orderBy("createdAt", "desc")
-      )
-  );
+  const { data: chats, loading } = useSubscribeFirebase({ user });
 
   return (
     <nav
       ref={sidebarRef}
-      className="bg-dark_gray flex flex-col h-full max-w-xs p-2 overflow-y-scrol md:w-[260px] "
+      className="bg-dark_gray flex flex-col h-screen max-w-xs p-2 overflow-y-scrol md:w-[260px] md:fixed"
     >
       <div className="flex-1">
         <NewChat />
@@ -36,7 +32,9 @@ const Sidebar = () => {
           <ModelSelection />
         </div>
         {loading ? (
-          <ChatLoader />
+          <div className="flex w-full justify-center items-center text-white pt-20">
+            <Loader text="Loading chats" />
+          </div>
         ) : (
           <div className="flex flex-col w-full gap-2">
             {chats?.docs.map((chat) => (

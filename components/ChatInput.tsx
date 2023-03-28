@@ -1,140 +1,33 @@
 "use client";
 
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-
 import { useSession } from "next-auth/react";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { db } from "../firebase";
-import { IMessage } from "../types";
-import useSWR from "swr";
-import { usePathname, useRouter } from "next/navigation";
-import { LoadingContext } from "../context/loadingContext";
+import React, { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import Loader from "./Loader";
+import useSendMessage from "../lib/useSendMessage";
 
 const ChatInput = () => {
   const [value, setValue] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const router = useRouter();
-  const { data: model } = useSWR("model", {
-    fallbackData: "text-davinci-003",
-  });
 
   const path = usePathname();
+  const { data: session } = useSession();
 
   let chatId = path ? path.split("/").slice(-1)[0] : null;
 
-  const { data: session } = useSession();
+  const { loading, sendMessage } = useSendMessage({
+    session,
+    chatId,
+    value,
+  });
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const sendMessage = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!value) return;
-    if (loading) return;
-
-    setLoading(true);
-
-    const question = value.trim();
-
-    // await fetch("/api/addQuestion", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     text: question,
-    //     chatId,
-    //     session,
-    //   }),
-    // });
-
-    const message: IMessage = {
-      text: question,
-      createdAt: serverTimestamp(),
-      read: true,
-      user: {
-        _id: session?.user?.email!,
-        name: session?.user?.name!,
-        avatar:
-          session?.user?.image ||
-          `https://ui-avatars.com/api/?name=${session?.user?.name!}`,
-      },
-    };
-
-    const blankResponse: IMessage = {
-      text: "",
-      createdAt: serverTimestamp(),
-      read: false,
-      user: {
-        _id: "chatGPT",
-        name: "chatGPT",
-        avatar: "/chatgpt-icon.png",
-      },
-    };
-
+    sendMessage();
     setValue("");
-
-    if (!chatId) {
-      const doc = await addDoc(
-        collection(db, "users", session?.user?.email!, "chats"),
-        {
-          userId: session?.user?.email!,
-          createdAt: serverTimestamp(),
-        }
-      );
-      chatId = doc.id;
-
-      router.push(`/chat/${chatId}`);
-    }
-
-    await addDoc(
-      collection(
-        db,
-        "users",
-        session?.user?.email!,
-        "chats",
-        chatId,
-        "messages"
-      ),
-      message
-    );
-
-    const responseMessage = await addDoc(
-      collection(
-        db,
-        "users",
-        session?.user?.email!,
-        "chats",
-        chatId,
-        "messages"
-      ),
-      blankResponse
-    );
-
-    await fetch("/api/askQuestion", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        text: question,
-        chatId,
-        model,
-        session,
-        messageId: responseMessage.id,
-      }),
-    });
-
-    setLoading(false);
-
-    // const docRef = doc(db, "users", session?.user?.email!, "chats", chatId);
-
-    // const chatSnap = await getDoc(docRef);
-    // if (!chatSnap.data().name) {
-    //   await updateDoc(docRef, { name: "12" });
-    // }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -161,7 +54,7 @@ const ChatInput = () => {
       <form
         ref={formRef}
         className=" gap-1 border-l-gray-900/50 text-white bg-gray_light rounded-md flex shadow-[0_0_15px_rgba(0,0,0,0.10)] md:max-w-3xl w-full "
-        onSubmit={sendMessage}
+        onSubmit={handleSubmit}
       >
         <div className="flex grow pr-2 py-2 ">
           <textarea
@@ -176,15 +69,7 @@ const ChatInput = () => {
           />
 
           {loading ? (
-            <div>
-              <span>.</span>
-              <span className="animate-[flicker_2s_steps(1,start)_infinite]">
-                .
-              </span>
-              <span className="animate-[flickerAlt_2s_steps(1,start)_infinite]">
-                .
-              </span>
-            </div>
+            <Loader />
           ) : (
             <button
               type="submit"
@@ -201,3 +86,89 @@ const ChatInput = () => {
 };
 
 export default ChatInput;
+
+// if (!value) return;
+// if (loading) return;
+
+// setLoading(true);
+
+// const question = value.trim();
+
+// const message: IMessage = {
+//   text: question,
+//   createdAt: serverTimestamp(),
+//   read: true,
+//   user: {
+//     _id: session?.user?.email!,
+//     name: session?.user?.name!,
+//     avatar:
+//       session?.user?.image ||
+//       `https://ui-avatars.com/api/?name=${session?.user?.name!}`,
+//   },
+// };
+
+// const blankResponse: IMessage = {
+//   text: "",
+//   createdAt: serverTimestamp(),
+//   read: false,
+//   user: {
+//     _id: "chatGPT",
+//     name: "chatGPT",
+//     avatar: "/chatgpt-icon.png",
+//   },
+// };
+
+// setValue("");
+
+// if (!chatId) {
+//   const doc = await addDoc(
+//     collection(db, "users", session?.user?.email!, "chats"),
+//     {
+//       userId: session?.user?.email!,
+//       createdAt: serverTimestamp(),
+//     }
+//   );
+//   chatId = doc.id;
+
+//   router.push(`/chat/${chatId}`);
+// }
+
+// await addDoc(
+//   collection(
+//     db,
+//     "users",
+//     session?.user?.email!,
+//     "chats",
+//     chatId,
+//     "messages"
+//   ),
+//   message
+// );
+
+// const responseMessage = await addDoc(
+//   collection(
+//     db,
+//     "users",
+//     session?.user?.email!,
+//     "chats",
+//     chatId,
+//     "messages"
+//   ),
+//   blankResponse
+// );
+
+// await fetch("/api/askQuestion", {
+//   method: "POST",
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+//   body: JSON.stringify({
+//     text: question,
+//     chatId,
+//     model,
+//     session,
+//     messageId: responseMessage.id,
+//   }),
+// });
+
+// setLoading(false);

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext } from "react";
 import Sidebar from "./Sidebar";
 import MenuIcon from "./icons/MenuIcon";
 import CloseIcon from "./icons/CloseIcon";
@@ -9,12 +9,6 @@ import { SidebarContext } from "../context/sidebarContext";
 import NewChat from "./NewChat";
 
 const Navbar = () => {
-  console.log("navbar rendered");
-  // const [showSidebar, setShowSidebar] = useState(false);
-
-  // const toggleSidebar = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   setShowSidebar(!showSidebar);
-  // };
   const { showSidebar, hideSidebar, displaySidebar } =
     useContext(SidebarContext);
 

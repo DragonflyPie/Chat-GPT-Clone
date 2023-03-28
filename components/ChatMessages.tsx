@@ -1,20 +1,15 @@
 "use client";
 
 import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  updateDoc,
-} from "firebase/firestore";
+  ArrowDownCircleIcon,
+  ArrowPathIcon,
+} from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 
-import React, { useContext, useEffect, useRef } from "react";
-import { useCollection } from "react-firebase-hooks/firestore";
-import { db } from "../firebase";
+import React, { useEffect, useRef } from "react";
+import useSubscribeFirebase from "../lib/useSubscribeFirebase";
+import useAutoNameChat from "../lib/useNameChat";
+import Loader from "./Loader";
 
 import Message from "./Message";
 
@@ -25,49 +20,53 @@ interface ChatMessagesProps {
 const ChatMessages = ({ id }: ChatMessagesProps) => {
   const { data: session } = useSession();
 
+  const user = session?.user?.email;
+
+  console.log(user);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const [messages] = useCollection(
-    session &&
-      query(
-        collection(db, "users", session.user?.email!, "chats", id, "messages"),
-        orderBy("createdAt", "asc")
-      )
-  );
+  const { data: messages, loading } = useSubscribeFirebase({
+    chatId: id,
+    user,
+  });
 
-  useEffect(() => {
-    if (!session) return;
-    const getName = async () => {
-      const docRef = doc(db, "users", session?.user?.email!, "chats", id);
-      const chatSnap = await getDoc(docRef);
-      const chatData = chatSnap.data();
-
-      if (chatData && !chatData.name && messages?.docs.length) {
-        const newName = messages.docs[0].data().text.trim().slice(0, 20);
-        await updateDoc(docRef, { name: newName });
-      }
-    };
-    getName();
-  }, [db, session, messages]);
+  useAutoNameChat({ messages, id, user });
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  if (loading) {
+    return (
+      <div className=" flex flex-col justify-center items-center pt-[20vh] pr-10 text-white gap-8 ">
+        <Loader text="Loading messages" />
+        <ArrowPathIcon className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+
   return (
-    <div className="flex-1 overflow-y-auto">
-      {messages?.docs.map((message, index) => (
-        <Message
-          key={message.id}
-          content={message.data()}
-          messageId={message.id}
-          chatId={id}
-          isLast={messages.docs.length - 1 === index}
-        />
-      ))}
-      {/* {loading && <MessageReplacement />} */}
-      <div className="h-24"></div>
-      <div className="" ref={messagesEndRef}></div>
+    <div className="h-[calc(100vh-7.5rem)] md:h-[calc(100vh-5rem)]">
+      {messages?.docs.length ? (
+        <div className="flex overflow-y-auto flex-col">
+          {messages.docs.map((message, index) => (
+            <Message
+              key={message.id}
+              message={message}
+              chatId={id}
+              isLast={messages.docs.length - 1 === index}
+            />
+          ))}
+          <div className="h-24"></div>
+          <div className="" ref={messagesEndRef}></div>
+        </div>
+      ) : (
+        <div className="flex flex-col h-full text-white pt-[20vh] pb-10 items-center justify-between">
+          <h2 className="">No messages yet.</h2>
+          <ArrowDownCircleIcon className="w-6 h-6 animate-bounce" />
+        </div>
+      )}
     </div>
   );
 };

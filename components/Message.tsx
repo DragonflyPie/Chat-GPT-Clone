@@ -3,73 +3,37 @@ import { doc, updateDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useRef, useState } from "react";
 import { db } from "../firebase";
+import useTypeMessage from "../lib/useTypeMessage";
+import { IMessage } from "../types";
 import OpenAi from "./icons/OpenAi";
 
 interface MessageProps {
-  content: DocumentData;
+  message: DocumentData;
   isLast: boolean;
   chatId: string;
-  messageId: string;
 }
 
-const Message = ({ content, isLast, chatId, messageId }: MessageProps) => {
+const Message = ({ message, isLast, chatId }: MessageProps) => {
+  const content = message.data() as IMessage;
   const fullText = content.text;
-  const [text, setText] = useState("");
-  const [index, setIndex] = useState(0);
   const { data: session } = useSession();
+  const user = session?.user?.email;
+
+  const { text } = useTypeMessage({
+    user,
+    chatId,
+    content,
+    messageId: message.id,
+  });
 
   const messageRef = useRef<HTMLDivElement>(null);
   const chatGPT = content.user.name === "chatGPT";
 
   useEffect(() => {
-    if (content.read || !fullText.length) return;
-
-    if (index < fullText.length) {
-      setTimeout(() => {
-        setText(text + fullText[index]);
-        setIndex(index + 1);
-      }, 35);
-    } else {
-      const docRef = doc(
-        db,
-        "users",
-        session?.user?.email!,
-        "chats",
-        chatId,
-        "messages",
-        messageId
-      );
-      updateDoc(docRef, { read: true });
-    }
-  }, [index, content, isLast]);
-
-  // useEffect(() => {
-  //   if (!isLast) {
-  //     setAnimate(false);
-  //     return;
-  //   }
-
-  //   if (index < fullText.length) {
-  //     setTimeout(() => {
-  //       setText(text + fullText[index]);
-  //       setIndex(index + 1);
-  //     }, 35);
-  //   } else {
-  //     setAnimate(false);
-  //   }
-  // }, [index, isLast, fullText]);
-
-  // useEffect(() => {
-  //   if (loading && chatGPT && isLast) {
-  //     setAnimate(true);
-  //   }
-  // }, [loading, chatGPT, isLast]);
-
-  useEffect(() => {
     if (isLast) {
       messageRef.current?.scrollIntoView();
     }
-  }, [isLast, index]);
+  }, [isLast, text]);
 
   return (
     <div

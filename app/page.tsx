@@ -41,8 +41,6 @@ const Home = () => (
         </div>
       </div>
     </div>
-
-    {/* <ChatInput /> */}
   </div>
 );
 

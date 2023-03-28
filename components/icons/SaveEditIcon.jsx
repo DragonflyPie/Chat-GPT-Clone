@@ -1,6 +1,6 @@
 import React from "react";
 
-const SaveEdit = () => {
+const SaveEditIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -19,4 +19,4 @@ const SaveEdit = () => {
   );
 };
 
-export default SaveEdit;
+export default SaveEditIcon;

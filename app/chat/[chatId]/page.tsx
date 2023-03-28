@@ -1,7 +1,6 @@
 "use client";
 
-import React, { ContextType, useContext, useEffect } from "react";
-import ChatInput from "../../../components/ChatInput";
+import React, { useContext, useEffect } from "react";
 import ChatMessages from "../../../components/ChatMessages";
 import { SidebarContext } from "../../../context/sidebarContext";
 
@@ -21,9 +20,8 @@ const ChatPage = ({ params: { chatId } }: ChatPageProps) => {
   }, []);
 
   return (
-    <div className="flex flex-col overflow-hidden h-full">
+    <div className="flex flex-col overflow-hidden h-full min-h-[calc(100vh-7.5rem)]">
       <ChatMessages id={chatId} />
-      {/* <ChatInput chatId={chatId} /> */}
     </div>
   );
 };

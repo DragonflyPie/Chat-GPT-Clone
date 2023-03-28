@@ -4,7 +4,7 @@ import Select from "react-select";
 const fetchModels = () => fetch("/api/getModels").then((res) => res.json());
 
 const ModelSelection = () => {
-  const { data, isLoading } = useSWR("models", fetchModels);
+  const { data } = useSWR("models", fetchModels);
   const { data: model, mutate: setModel } = useSWR("model", {
     fallbackData: "text-davinci-003",
   });

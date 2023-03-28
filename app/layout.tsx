@@ -35,8 +35,8 @@ export default async function RootLayout({
                   <div className="hidden md:flex">
                     <Sidebar />
                   </div>
-                  <div className="h-full w-full flex flex-col md:min-h-screen">
-                    <div className="bg-background min-h-[calc(100vh-7.5rem)]  flex-1">
+                  <div className="h-full w-full flex flex-col md:min-h-screen md:pl-[260px]">
+                    <div className="bg-background min-h-[calc(100vh-7.5rem)] h-full  flex-1">
                       {children}
                     </div>
                     <ChatInput />

@@ -1,26 +1,13 @@
-import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import TrashIcon from "./icons/TrashIcon";
 import ChatIcon from "./icons/ChatIcon";
-import SaveEditIcon from "./icons/SaveEdit";
 import EditIcon from "./icons/EditIcon";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  updateDoc,
-} from "firebase/firestore";
-import { db } from "../firebase";
-import SaveEdit from "./icons/SaveEdit";
+import SaveEditIcon from "./icons/SaveEditIcon";
 import useClickOutside from "../lib/useClickOutside";
+import useFirebaseChat from "../lib/useFirebaseChat";
 
 interface ChatRowProps {
   id: string;
@@ -28,13 +15,18 @@ interface ChatRowProps {
 }
 
 const ChatRow = ({ id, name }: ChatRowProps) => {
+  const [active, setActive] = useState(false);
+  const [edit, setEdit] = useState(false);
+
   const path = usePathname();
   const router = useRouter();
-  const { data: session } = useSession();
-  const [active, setActive] = useState(false);
-  const docRef = doc(db, "users", session?.user?.email!, "chats", id);
 
-  const [edit, setEdit] = useState(false);
+  const { data: session } = useSession();
+  const user = session?.user?.email;
+  const { deleteChat, nameChat } = useFirebaseChat({
+    user,
+    id,
+  });
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -43,44 +35,32 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
     setActive(path.includes(id));
   }, [path]);
 
-  const handler = () => {
-    setEdit(false);
-  };
+  useClickOutside(inputRef, () => setEdit(false));
 
-  useClickOutside(inputRef, handler);
-  // useEffect(() => {
-  //   const handleClick = (e: MouseEvent) => {
-  //     // e.stopPropagation();
-  //     if (inputRef.current && !inputRef.current.contains(e.target as Node))
-  //       setEdit(false);
-  //   };
-  //   document.addEventListener("click", handleClick, true);
-
-  //   return () => document.removeEventListener("click", handleClick, true);
-  // }, [inputRef]);
-
-  const editName = async (e: React.MouseEvent<HTMLSpanElement>) => {
+  const toggleEditModeOn = (e: React.MouseEvent<HTMLSpanElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setEdit(true);
   };
 
-  const deleteChat = async (e: React.MouseEvent<HTMLSpanElement>) => {
+  const handleDelete = async (e: React.MouseEvent<HTMLSpanElement>) => {
     e.preventDefault();
-    await deleteDoc(doc(db, "users", session?.user?.email!, "chats", id));
+    deleteChat(id);
+
     if (active) {
       router.push("/");
     }
   };
 
-  const saveName = async () => {
+  const handleRename = async () => {
     const name = inputRef.current?.value;
-    if (name) await updateDoc(docRef, { name: name });
+    if (name) nameChat({ name: name, id: id });
+
     setEdit(false);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") saveName();
+    if (e.key === "Enter") handleRename();
   };
 
   return (
@@ -105,7 +85,7 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
           />
         ) : (
           <React.Fragment>
-            <p className="text-ellipsis overflow-hidden break-all h-5 inline-flex capitalize  px-1">
+            <p className="text-ellipsis overflow-x-hidden break-all h-6 inline-flex capitalize  px-1">
               {name}
             </p>
             <div
@@ -120,15 +100,15 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
       </span>
       <span className="text-gray-300 inline-flex items-center gap-2">
         {edit ? (
-          <span className="hover:text-white" onClick={saveName}>
-            <SaveEdit />
+          <span className="hover:text-white" onClick={handleRename}>
+            <SaveEditIcon />
           </span>
         ) : (
-          <span className="hover:text-white" onClick={editName}>
+          <span className="hover:text-white" onClick={toggleEditModeOn}>
             <EditIcon />
           </span>
         )}
-        <span className="hover:text-white" onClick={deleteChat}>
+        <span className="hover:text-white" onClick={handleDelete}>
           <TrashIcon />
         </span>
       </span>

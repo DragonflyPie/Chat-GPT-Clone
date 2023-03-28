@@ -16,3 +16,9 @@ interface QueryProps {
   text: string;
   model: string;
 }
+
+interface IChat {
+  createdAt: string;
+  userId: string;
+  messages?: IMessage[];
+}
