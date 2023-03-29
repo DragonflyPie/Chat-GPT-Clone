@@ -3,18 +3,26 @@ import { useState } from "react";
 import { db } from "../firebase";
 import { IMessage } from "../types";
 import useSWR from "swr";
-import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
 
 interface SendMessageProps {
   value: string;
-  session: Session | null;
-  chatId: string | null;
+  userObject?:
+    | {
+        name?: string | null | undefined;
+        email?: string | null | undefined;
+        image?: string | null | undefined;
+      }
+    | undefined;
 }
 
-function useSendMessage({ value, session, chatId }: SendMessageProps) {
+function useSendMessage({ value, userObject }: SendMessageProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+
+  const name = userObject?.name;
+  const image = userObject?.image;
+  const email = userObject?.email;
 
   const { data: model } = useSWR("model", {
     fallbackData: "text-davinci-003",
@@ -22,7 +30,13 @@ function useSendMessage({ value, session, chatId }: SendMessageProps) {
 
   const router = useRouter();
 
-  const sendMessage = async () => {
+  const sendMessage = async (chatId: string | undefined | null) => {
+    if (!userObject || !name || !email || !image) {
+      throw new Error("No user object provided");
+    }
+
+    if (!chatId) throw new Error("No chat ID provided");
+
     setLoading(true);
 
     const blankResponse: IMessage = {
@@ -36,55 +50,25 @@ function useSendMessage({ value, session, chatId }: SendMessageProps) {
       },
     };
 
-    if (!chatId) {
-      const doc = await addDoc(
-        collection(db, "users", session?.user?.email!, "chats"),
-        {
-          userId: session?.user?.email!,
-          createdAt: serverTimestamp(),
-        }
-      );
-
-      chatId = doc.id;
-
-      router.push(`/chat/${chatId}`);
-    }
-
     try {
       const message: IMessage = {
         text: value.trim(),
         createdAt: serverTimestamp(),
         read: true,
         user: {
-          _id: session?.user?.email!,
-          name: session?.user?.name!,
-          avatar:
-            session?.user?.image ||
-            `https://ui-avatars.com/api/?name=${session?.user?.name!}`,
+          _id: email,
+          name: name,
+          avatar: image || `https://ui-avatars.com/api/?name=${name}`,
         },
       };
 
       await addDoc(
-        collection(
-          db,
-          "users",
-          session?.user?.email!,
-          "chats",
-          chatId,
-          "messages"
-        ),
+        collection(db, "users", email, "chats", chatId, "messages"),
         message
       );
 
       const responseMessage = await addDoc(
-        collection(
-          db,
-          "users",
-          session?.user?.email!,
-          "chats",
-          chatId,
-          "messages"
-        ),
+        collection(db, "users", email, "chats", chatId, "messages"),
         blankResponse
       );
 
@@ -97,7 +81,7 @@ function useSendMessage({ value, session, chatId }: SendMessageProps) {
           text: value.trim(),
           chatId,
           model,
-          session,
+          userId: email,
           messageId: responseMessage.id,
         }),
       });

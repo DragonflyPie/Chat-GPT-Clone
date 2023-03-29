@@ -6,8 +6,8 @@ import EditIcon from "./icons/EditIcon";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import SaveEditIcon from "./icons/SaveEditIcon";
-import useClickOutside from "../lib/useClickOutside";
-import useFirebaseChat from "../lib/useFirebaseChat";
+import { deleteChat, nameChat } from "../lib/firebaseUtils";
+import RowInput from "./RowInput";
 
 interface ChatRowProps {
   id: string;
@@ -23,10 +23,6 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
 
   const { data: session } = useSession();
   const user = session?.user?.email;
-  const { deleteChat, nameChat } = useFirebaseChat({
-    user,
-    id,
-  });
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -34,8 +30,6 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
     if (!path) return;
     setActive(path.includes(id));
   }, [path]);
-
-  useClickOutside(inputRef, () => setEdit(false));
 
   const toggleEditModeOn = (e: React.MouseEvent<HTMLSpanElement>) => {
     e.preventDefault();
@@ -45,22 +39,25 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
 
   const handleDelete = async (e: React.MouseEvent<HTMLSpanElement>) => {
     e.preventDefault();
-    deleteChat(id);
+    if (!user || !id) return;
+    deleteChat({ user, id });
 
     if (active) {
       router.push("/");
     }
   };
 
-  const handleRename = async () => {
+  const renameChat = () => {
     const name = inputRef.current?.value;
-    if (name) nameChat({ name: name, id: id });
+    if (name) nameChat({ name: name, id: id, user: user });
 
     setEdit(false);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") handleRename();
+  const handleSaveName = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    renameChat();
   };
 
   return (
@@ -75,15 +72,21 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
       </span>
       <span className="relative grow">
         {edit ? (
-          <input
-            autoFocus
-            ref={inputRef}
-            className="bg-gray_light w-full px-1  ring-0 outline-none focus:ring-0 rounded "
-            type="text"
-            defaultValue={name}
-            onKeyDown={handleKeyPress}
+          <RowInput
+            name={name}
+            inputRef={inputRef}
+            renameChat={renameChat}
+            editOff={() => setEdit(false)}
           />
         ) : (
+          // <input
+          //   autoFocus
+          //   ref={inputRef}
+          //   className="bg-gray_light w-full px-1  ring-0 outline-none focus:ring-0 rounded "
+          //   type="text"
+          //   defaultValue={name}
+          //   onKeyDown={handleKeyPress}
+          // />
           <React.Fragment>
             <p className="text-ellipsis overflow-x-hidden break-all h-6 inline-flex capitalize  px-1">
               {name}
@@ -100,7 +103,7 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
       </span>
       <span className="text-gray-300 inline-flex items-center gap-2">
         {edit ? (
-          <span className="hover:text-white" onClick={handleRename}>
+          <span className="hover:text-white" onClick={handleSaveName}>
             <SaveEditIcon />
           </span>
         ) : (

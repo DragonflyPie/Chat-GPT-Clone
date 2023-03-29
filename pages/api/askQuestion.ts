@@ -12,7 +12,7 @@ interface RequestProps {
   text: string;
   chatId: string;
   model: string;
-  session: Session;
+  userId: string;
   messageId: string;
 }
 
@@ -20,7 +20,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const { text, chatId, model, session, messageId }: RequestProps = req.body;
+  const { text, chatId, model, userId, messageId }: RequestProps = req.body;
 
   if (!text) {
     res.status(400).json({ answer: "Please provide question" });
@@ -36,7 +36,7 @@ export default async function handler(
 
   await adminDb
     .collection("users")
-    .doc(session.user?.email!)
+    .doc(userId!)
     .collection("chats")
     .doc(chatId)
     .collection("messages")

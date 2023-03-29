@@ -22,8 +22,6 @@ const ChatMessages = ({ id }: ChatMessagesProps) => {
 
   const user = session?.user?.email;
 
-  console.log(user);
-
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { data: messages, loading } = useSubscribeFirebase({

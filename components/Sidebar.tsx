@@ -2,11 +2,8 @@
 
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import NewChat from "./NewChat";
-import { useCollection } from "react-firebase-hooks/firestore";
-import { collection, orderBy, query } from "firebase/firestore";
-import { db } from "../firebase";
 import ChatRow from "./ChatRow";
 import ModelSelection from "./ModelSelection";
 import Loader from "./Loader";
@@ -47,7 +44,7 @@ const Sidebar = () => {
           </div>
         )}
       </div>
-      {session && (
+      {user && (
         <div
           className="flex justify-center items-center pb-2"
           onClick={() => signOut()}

@@ -18,7 +18,6 @@ export default function useFirebaseMessages({
   user,
   chatId,
 }: UseFirebaseMessagesProps) {
-  console.log("mounted");
   const [data, setData] = useState<QuerySnapshot<DocumentData>>();
   const [loading, setLoading] = useState(false);
 

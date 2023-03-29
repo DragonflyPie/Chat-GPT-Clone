@@ -1,5 +1,9 @@
 import InfoBlock from "../components/InfoBlock";
-import { SunIcon } from "@heroicons/react/24/outline";
+import {
+  SunIcon,
+  ExclamationTriangleIcon,
+  BoltIcon,
+} from "@heroicons/react/24/outline";
 
 const Home = () => (
   <div className="w-full flex flex-col px-6 text-gray-100 items-center justify-center">
@@ -19,8 +23,8 @@ const Home = () => (
         </div>
         <div className="flex flex-col items-center w-full">
           <div className="flex md:flex-col items-center mb-5 justify-center gap-2">
-            <SunIcon className="h-7 w-7" />
-            <h2>Examples</h2>
+            <BoltIcon className="h-7 w-7" />
+            <h2>Capabilities</h2>
           </div>
           <ul className="flex flex-col gap-3.5 w-full m-auto sm:max-w-md">
             <InfoBlock text="Who are you? dfsfdsf dsf sdfsdf dsf df dfdfddsf " />
@@ -30,8 +34,8 @@ const Home = () => (
         </div>
         <div className="flex flex-col items-center w-full">
           <div className="flex md:flex-col items-center mb-5 justify-center gap-2">
-            <SunIcon className="h-7 w-7" />
-            <h2>Examples</h2>
+            <ExclamationTriangleIcon className="h-7 w-7" />
+            <h2>Limitations</h2>
           </div>
           <ul className="flex flex-col gap-3.5 w-full m-auto sm:max-w-md">
             <InfoBlock text="Who are you? dfsfdsf dsf sdfsdf dsf df dfdfddsf " />
