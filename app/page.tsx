@@ -4,6 +4,7 @@ import {
   ExclamationTriangleIcon,
   BoltIcon,
 } from "@heroicons/react/24/outline";
+import ChatInput from "../components/ChatInput";
 
 const Home = () => (
   <div className="w-full flex flex-col px-6 text-gray-100 items-center justify-center">
@@ -45,6 +46,7 @@ const Home = () => (
         </div>
       </div>
     </div>
+    <ChatInput />
   </div>
 );
 

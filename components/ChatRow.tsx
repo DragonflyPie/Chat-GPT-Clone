@@ -22,7 +22,7 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
   const router = useRouter();
 
   const { data: session } = useSession();
-  const user = session?.user?.email;
+  const email = session?.user?.email;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -39,8 +39,8 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
 
   const handleDelete = async (e: React.MouseEvent<HTMLSpanElement>) => {
     e.preventDefault();
-    if (!user || !id) return;
-    deleteChat({ user, id });
+    if (!email || !id) return;
+    deleteChat({ email, id });
 
     if (active) {
       router.push("/");
@@ -49,7 +49,7 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
 
   const renameChat = () => {
     const name = inputRef.current?.value;
-    if (name) nameChat({ name: name, id: id, user: user });
+    if (name) nameChat({ name, id: id, email });
 
     setEdit(false);
   };
@@ -88,7 +88,7 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
           //   onKeyDown={handleKeyPress}
           // />
           <React.Fragment>
-            <p className="text-ellipsis overflow-x-hidden break-all h-6 inline-flex capitalize  px-1">
+            <p className="text-ellipsis overflow-hidden break-all h-6 inline-flex capitalize  px-1">
               {name}
             </p>
             <div

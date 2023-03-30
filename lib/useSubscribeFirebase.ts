@@ -10,28 +10,28 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase";
 
 interface UseFirebaseMessagesProps {
-  user: string | null | undefined;
+  email: string | null | undefined;
   chatId?: string;
 }
 
 export default function useFirebaseMessages({
-  user,
+  email,
   chatId,
 }: UseFirebaseMessagesProps) {
   const [data, setData] = useState<QuerySnapshot<DocumentData>>();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!user) return;
+    if (!email) return;
     setLoading(true);
 
     const q = chatId
       ? query(
-          collection(db, "users", user, "chats", chatId, "messages"),
+          collection(db, "users", email, "chats", chatId, "messages"),
           orderBy("createdAt", "asc")
         )
       : query(
-          collection(db, "users", user, "chats"),
+          collection(db, "users", email, "chats"),
           orderBy("createdAt", "asc")
         );
 
@@ -41,7 +41,7 @@ export default function useFirebaseMessages({
     });
 
     return unsubscribe;
-  }, [chatId, user, db]);
+  }, [chatId, email, db]);
 
   return { loading, data };
 }

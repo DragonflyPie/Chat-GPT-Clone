@@ -17,10 +17,10 @@ const Message = ({ message, isLast, chatId }: MessageProps) => {
   const content = message.data() as IMessage;
   const fullText = content.text;
   const { data: session } = useSession();
-  const user = session?.user?.email;
+  const email = session?.user?.email;
 
   const { text } = useTypeMessage({
-    user,
+    email,
     chatId,
     content,
     messageId: message.id,

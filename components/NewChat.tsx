@@ -15,10 +15,10 @@ interface NewChatProps {
 const NewChat = ({ mobile }: NewChatProps) => {
   const router = useRouter();
   const { data: session } = useSession();
-  const user = session?.user?.email;
+  const email = session?.user?.email;
 
   const handleCreate = async () => {
-    const newChatId = await createChat(user);
+    const newChatId = await createChat(email);
 
     router.push(`/chat/${newChatId}`);
   };

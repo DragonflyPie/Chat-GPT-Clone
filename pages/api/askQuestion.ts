@@ -2,7 +2,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import query from "../../lib/queryApi";
 import { adminDb } from "../../firebaseAdmin";
-import { Session } from "next-auth";
 
 type Data = {
   answer: string;
@@ -11,28 +10,26 @@ type Data = {
 interface RequestProps {
   text: string;
   chatId: string;
-  model: string;
   userId: string;
   messageId: string;
+  chatHistory: {
+    role: string;
+    content: string;
+  }[];
 }
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const { text, chatId, model, userId, messageId }: RequestProps = req.body;
-
-  if (!text) {
-    res.status(400).json({ answer: "Please provide question" });
-    return;
-  }
+  const { chatId, userId, messageId, chatHistory }: RequestProps = req.body;
 
   if (!chatId) {
     res.status(400).json({ answer: "Please provide valid Chat ID" });
     return;
   }
 
-  const response = await query({ text, model });
+  const response = await query({ chatHistory });
 
   await adminDb
     .collection("users")

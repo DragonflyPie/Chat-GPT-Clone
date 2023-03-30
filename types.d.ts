@@ -12,10 +12,12 @@ interface IMessage {
   };
 }
 
-interface QueryProps {
-  text: string;
-  model: string;
+interface ChatMessage {
+  user: string;
+  content: string;
 }
+
+type ChatHistory = Chatmessage[];
 
 interface IChat {
   createdAt: string;

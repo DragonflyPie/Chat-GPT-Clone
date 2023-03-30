@@ -12,24 +12,23 @@ import useAutoNameChat from "../lib/useNameChat";
 import Loader from "./Loader";
 
 import Message from "./Message";
+import { QuerySnapshot } from "firebase/firestore";
+import { DocumentData } from "@firebase/firestore-types";
 
 interface ChatMessagesProps {
-  id: string;
+  chatId: string;
+  messages: QuerySnapshot<DocumentData> | undefined;
+  loading: boolean;
 }
 
-const ChatMessages = ({ id }: ChatMessagesProps) => {
+const ChatMessages = ({ chatId, messages, loading }: ChatMessagesProps) => {
   const { data: session } = useSession();
 
   const user = session?.user?.email;
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { data: messages, loading } = useSubscribeFirebase({
-    chatId: id,
-    user,
-  });
-
-  useAutoNameChat({ messages, id, user });
+  useAutoNameChat({ messages, id: chatId, email: user });
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -45,14 +44,14 @@ const ChatMessages = ({ id }: ChatMessagesProps) => {
   }
 
   return (
-    <div className="h-[calc(100vh-7.5rem)] md:h-[calc(100vh-5rem)]">
+    <div className="h-[calc(100vh-7.5rem)] md:h-[calc(100vh-5rem)] overflow-y-auto">
       {messages?.docs.length ? (
         <div className="flex overflow-y-auto flex-col">
           {messages.docs.map((message, index) => (
             <Message
               key={message.id}
               message={message}
-              chatId={id}
+              chatId={chatId}
               isLast={messages.docs.length - 1 === index}
             />
           ))}

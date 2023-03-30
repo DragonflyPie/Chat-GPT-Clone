@@ -8,14 +8,14 @@ interface UseTypeMessageProps {
   content: IMessage;
   messageId: string;
   chatId: string;
-  user: string | null | undefined;
+  email: string | null | undefined;
 }
 
 export default function useTypeMessage({
   content,
   messageId,
   chatId,
-  user,
+  email,
 }: UseTypeMessageProps) {
   const [index, setIndex] = useState(0);
   const [text, setText] = useState("");
@@ -23,7 +23,7 @@ export default function useTypeMessage({
   const fullText = content.text;
 
   useEffect(() => {
-    if (content.read || !fullText.length || !user) return;
+    if (content.read || !fullText.length || !email) return;
 
     if (index < fullText.length) {
       const timerId = setTimeout(() => {
@@ -36,7 +36,7 @@ export default function useTypeMessage({
       const docRef = doc(
         db,
         "users",
-        user,
+        email,
         "chats",
         chatId,
         "messages",

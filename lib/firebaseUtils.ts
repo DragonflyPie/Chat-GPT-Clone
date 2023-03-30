@@ -9,12 +9,12 @@ import {
 import { db } from "../firebase";
 
 interface DeleteChatProps {
-  user: string;
+  email: string;
   id: string;
 }
 
 interface NameChatProps {
-  user: string | null | undefined;
+  email: string | null | undefined;
   id: string;
   name: string;
 }
@@ -28,12 +28,12 @@ export const createChat = async (email: string | null | undefined) => {
   return doc.id;
 };
 
-export const deleteChat = async ({ user, id }: DeleteChatProps) => {
-  const docRef = doc(db, "users", user!, "chats", id);
+export const deleteChat = async ({ email, id }: DeleteChatProps) => {
+  const docRef = doc(db, "users", email!, "chats", id);
   await deleteDoc(docRef);
 };
 
-export const nameChat = async ({ user, name, id }: NameChatProps) => {
-  const docRef = doc(db, "users", user!, "chats", id);
+export const nameChat = async ({ email, name, id }: NameChatProps) => {
+  const docRef = doc(db, "users", email!, "chats", id);
   if (name) await updateDoc(docRef, { name: name });
 };

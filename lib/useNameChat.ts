@@ -5,16 +5,16 @@ import React, { useEffect } from "react";
 import { db } from "../firebase";
 
 interface UseNameChatProps {
-  user: string | undefined | null;
+  email: string | undefined | null;
   id: string;
   messages?: QuerySnapshot<DocumentData>;
 }
 
-export default function useNameChat({ user, messages, id }: UseNameChatProps) {
+export default function useNameChat({ email, messages, id }: UseNameChatProps) {
   useEffect(() => {
-    if (!user || !messages) return;
+    if (!email || !messages) return;
     const getName = async () => {
-      const docRef = doc(db, "users", user, "chats", id);
+      const docRef = doc(db, "users", email, "chats", id);
       const chatSnap = await getDoc(docRef);
       const chatData = chatSnap.data();
 
@@ -24,6 +24,6 @@ export default function useNameChat({ user, messages, id }: UseNameChatProps) {
       }
     };
     getName();
-  }, [db, user, messages]);
+  }, [db, email, messages]);
   return;
 }

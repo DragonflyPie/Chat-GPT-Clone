@@ -39,7 +39,6 @@ export default async function RootLayout({
                     <div className="bg-background min-h-[calc(100vh-7.5rem)] h-full  flex-1">
                       {children}
                     </div>
-                    <ChatInput />
                   </div>
                 </div>
               </React.Fragment>

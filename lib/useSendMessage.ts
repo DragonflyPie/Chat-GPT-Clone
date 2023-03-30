@@ -1,13 +1,16 @@
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  QuerySnapshot,
+  serverTimestamp,
+} from "firebase/firestore";
 import { useState } from "react";
 import { db } from "../firebase";
 import { IMessage } from "../types";
-import useSWR from "swr";
-import { useRouter } from "next/navigation";
+import { DocumentData } from "@firebase/firestore-types";
 
-interface SendMessageProps {
-  value: string;
-  userObject?:
+interface UseSendMessageProps {
+  user?:
     | {
         name?: string | null | undefined;
         email?: string | null | undefined;
@@ -16,28 +19,39 @@ interface SendMessageProps {
     | undefined;
 }
 
-function useSendMessage({ value, userObject }: SendMessageProps) {
+interface SendMessageProps {
+  chatId: string | undefined;
+  text: string;
+  messages?: QuerySnapshot<DocumentData>;
+}
+
+function useSendMessage({ user }: UseSendMessageProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const name = userObject?.name;
-  const image = userObject?.image;
-  const email = userObject?.email;
+  const name = user?.name;
+  const image = user?.image;
+  const email = user?.email;
 
-  const { data: model } = useSWR("model", {
-    fallbackData: "text-davinci-003",
-  });
-
-  const router = useRouter();
-
-  const sendMessage = async (chatId: string | undefined | null) => {
-    if (!userObject || !name || !email || !image) {
+  const sendMessage = async ({ chatId, text, messages }: SendMessageProps) => {
+    if (!user || !name || !email || !image) {
       throw new Error("No user object provided");
     }
+
+    if (!text) throw new Error("Blank input not allowed");
 
     if (!chatId) throw new Error("No chat ID provided");
 
     setLoading(true);
+
+    const chatHistory = messages?.docs.map((message) => {
+      return {
+        role: message.data().user.name === "chatGPT" ? "assistant" : "user",
+        content: message.data().text,
+      };
+    });
+    const lastMessage = { role: "user", content: text };
+    chatHistory?.push(lastMessage);
 
     const blankResponse: IMessage = {
       text: "",
@@ -52,7 +66,7 @@ function useSendMessage({ value, userObject }: SendMessageProps) {
 
     try {
       const message: IMessage = {
-        text: value.trim(),
+        text: text.trim(),
         createdAt: serverTimestamp(),
         read: true,
         user: {
@@ -78,9 +92,8 @@ function useSendMessage({ value, userObject }: SendMessageProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          text: value.trim(),
+          chatHistory: chatHistory,
           chatId,
-          model,
           userId: email,
           messageId: responseMessage.id,
         }),

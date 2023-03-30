@@ -3,23 +3,26 @@
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useRef, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Loader from "./Loader";
 import useSendMessage from "../lib/useSendMessage";
 import { createChat } from "../lib/firebaseUtils";
-import NewChat from "./NewChat";
+import { DocumentData } from "@firebase/firestore-types";
+import { QuerySnapshot } from "firebase/firestore";
 
-const ChatInput = () => {
+interface ChatInputProps {
+  chatId?: string;
+  messages?: QuerySnapshot<DocumentData>;
+}
+const ChatInput = ({ chatId, messages }: ChatInputProps) => {
   const [value, setValue] = useState("");
 
-  const path = usePathname();
   const router = useRouter();
   const { data: session } = useSession();
-  const userObject = session?.user;
+  const user = session?.user;
 
   const { loading, sendMessage } = useSendMessage({
-    userObject,
-    value,
+    user,
   });
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -28,17 +31,17 @@ const ChatInput = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const chatId = path ? path.split("/").slice(-1)[0] : null;
     let id;
     if (!chatId) {
-      id = await createChat(userObject?.email);
+      id = await createChat(user?.email);
       router.push(`/chat/${id}`);
     } else {
       id = chatId;
     }
-    await sendMessage(id);
 
+    const text = value;
     setValue("");
+    await sendMessage({ chatId: id, text, messages });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
