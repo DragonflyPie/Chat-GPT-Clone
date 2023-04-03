@@ -17,6 +17,8 @@ module.exports = {
         gray_light_message: "#444654",
         text_darker: "#d9d9e3",
         background_navbar: "#565869",
+        text_disabled: "#8e8ea0",
+        gray_icons: "#c5c5d2",
       },
       keyframes: {
         flicker: {

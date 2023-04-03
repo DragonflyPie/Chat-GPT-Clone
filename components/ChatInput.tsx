@@ -2,7 +2,7 @@
 
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "./Loader";
 import useSendMessage from "../lib/useSendMessage";
@@ -13,9 +13,16 @@ import { QuerySnapshot } from "firebase/firestore";
 interface ChatInputProps {
   chatId?: string;
   messages?: QuerySnapshot<DocumentData>;
+  value: string;
+  updateValue: (text: string) => void;
 }
-const ChatInput = ({ chatId, messages }: ChatInputProps) => {
-  const [value, setValue] = useState("");
+const ChatInput = ({
+  chatId,
+  messages,
+  value,
+  updateValue,
+}: ChatInputProps) => {
+  // const [value, setValue] = useState("");
 
   const router = useRouter();
   const { data: session } = useSession();
@@ -40,12 +47,12 @@ const ChatInput = ({ chatId, messages }: ChatInputProps) => {
     }
 
     const text = value;
-    setValue("");
+    updateValue("");
     await sendMessage({ chatId: id, text, messages });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(e.target.value);
+    updateValue(e.target.value);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -64,13 +71,14 @@ const ChatInput = ({ chatId, messages }: ChatInputProps) => {
   }, [value]);
 
   return (
-    <div className="w-full p-5 text-base flex justify-center bg-background">
+    <div className="w-full p-5 text-base flex bottom-0 justify-center bg-background border-t border-white/20 md:border-none">
       <form
         ref={formRef}
         className=" gap-1 border-l-gray-900/50 text-white bg-gray_light rounded-md flex shadow-[0_0_15px_rgba(0,0,0,0.10)] md:max-w-3xl w-full "
         onSubmit={handleSubmit}
+        onClick={() => textareaRef.current?.focus()}
       >
-        <div className="flex grow pr-2 py-2 ">
+        <div className="flex grow pr-2 py-2 md:py-3 md:pl-3 ">
           <textarea
             autoFocus={true}
             ref={textareaRef}
@@ -80,6 +88,7 @@ const ChatInput = ({ chatId, messages }: ChatInputProps) => {
             onChange={handleChange}
             className="bg-transparent resize-none w-full overflow-y-hidden h-6 max-h-52 outline-none pl-2 pr-4"
             value={value}
+            placeholder="Send a message..."
           />
 
           {loading ? (
@@ -87,7 +96,7 @@ const ChatInput = ({ chatId, messages }: ChatInputProps) => {
           ) : (
             <button
               type="submit"
-              className="hover:bg-dark_gray p-1 rounded-md disabled:hover:bg-transparent"
+              className="hover:bg-dark_gray p-1 rounded-md disabled:hover:bg-transparent disabled:text-text_disabled"
               disabled={!value}
             >
               <PaperAirplaneIcon className="h-4 w-4 -rotate-45" />

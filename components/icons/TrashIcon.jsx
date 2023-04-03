@@ -7,6 +7,7 @@ const Trash = () => {
       width="1em"
       height="1em"
       fill="none"
+      strokeWidth={2}
       stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"

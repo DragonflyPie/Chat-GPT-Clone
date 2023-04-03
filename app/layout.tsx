@@ -23,7 +23,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="text-small h-[calc(100vh - 2.5rem)] md:min-h-screen">
+      <body className="text-small">
         <SidebarProvider>
           <SessionProvider session={session}>
             {!session ? (
@@ -31,14 +31,12 @@ export default async function RootLayout({
             ) : (
               <React.Fragment>
                 <Navbar />
-                <div className="flex h-full">
+                <div className="flex">
                   <div className="hidden md:flex">
                     <Sidebar />
                   </div>
-                  <div className="h-full w-full flex flex-col md:min-h-screen md:pl-[260px]">
-                    <div className="bg-background min-h-[calc(100vh-7.5rem)] h-full  flex-1">
-                      {children}
-                    </div>
+                  <div className="w-full flex flex-col md:pl-[260px] h-[calc(100vh-2.5rem)] md:h-screen bg-background">
+                    {children}
                   </div>
                 </div>
               </React.Fragment>

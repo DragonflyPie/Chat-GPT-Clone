@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ChatInput from "../../../components/ChatInput";
 import ChatMessages from "../../../components/ChatMessages";
 import { SidebarContext } from "../../../context/sidebarContext";
@@ -14,6 +14,10 @@ interface ChatPageProps {
 }
 
 const ChatPage = ({ params: { chatId } }: ChatPageProps) => {
+  const [value, setValue] = useState("");
+  const updateValue = (text: string) => {
+    setValue(text);
+  };
   const { data: session } = useSession();
   const email = session?.user?.email;
   const { hideSidebar } = useContext(SidebarContext);
@@ -29,9 +33,19 @@ const ChatPage = ({ params: { chatId } }: ChatPageProps) => {
   }, []);
 
   return (
-    <div className="flex flex-col overflow-hidden">
-      <ChatMessages chatId={chatId} messages={messages} loading={loading} />
-      <ChatInput chatId={chatId} messages={messages} />
+    <div className="flex flex-col justify-between h-full">
+      <ChatMessages
+        chatId={chatId}
+        messages={messages}
+        loading={loading}
+        updateValue={updateValue}
+      />
+      <ChatInput
+        chatId={chatId}
+        messages={messages}
+        updateValue={updateValue}
+        value={value}
+      />
     </div>
   );
 };

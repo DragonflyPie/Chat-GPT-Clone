@@ -29,7 +29,7 @@ export default function useTypeMessage({
       const timerId = setTimeout(() => {
         setText((prevText) => prevText + fullText[index]);
         setIndex((prevIndex) => prevIndex + 1);
-      }, 30);
+      }, 20);
 
       return () => clearTimeout(timerId);
     } else {

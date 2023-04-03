@@ -44,12 +44,14 @@ function useSendMessage({ user }: UseSendMessageProps) {
 
     setLoading(true);
 
-    const chatHistory = messages?.docs.map((message) => {
-      return {
-        role: message.data().user.name === "chatGPT" ? "assistant" : "user",
-        content: message.data().text,
-      };
-    });
+    const chatHistory = !messages
+      ? []
+      : messages?.docs.map((message) => {
+          return {
+            role: message.data().user.name === "chatGPT" ? "assistant" : "user",
+            content: message.data().text,
+          };
+        });
     const lastMessage = { role: "user", content: text };
     chatHistory?.push(lastMessage);
 

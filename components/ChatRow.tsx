@@ -8,6 +8,8 @@ import { useSession } from "next-auth/react";
 import SaveEditIcon from "./icons/SaveEditIcon";
 import { deleteChat, nameChat } from "../lib/firebaseUtils";
 import RowInput from "./RowInput";
+import { ArrowDownCircleIcon, CheckIcon } from "@heroicons/react/24/outline";
+import CloseIcon from "./icons/CloseIcon";
 
 interface ChatRowProps {
   id: string;
@@ -16,7 +18,7 @@ interface ChatRowProps {
 
 const ChatRow = ({ id, name }: ChatRowProps) => {
   const [active, setActive] = useState(false);
-  const [edit, setEdit] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   const path = usePathname();
   const router = useRouter();
@@ -31,10 +33,8 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
     setActive(path.includes(id));
   }, [path]);
 
-  const toggleEditModeOn = (e: React.MouseEvent<HTMLSpanElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setEdit(true);
+  const switchEditModeOn = (e: React.MouseEvent<HTMLSpanElement>) => {
+    setEditMode(true);
   };
 
   const handleDelete = async (e: React.MouseEvent<HTMLSpanElement>) => {
@@ -49,9 +49,9 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
 
   const renameChat = () => {
     const name = inputRef.current?.value;
-    if (name) nameChat({ name, id: id, email });
+    name && nameChat({ name, id, email });
 
-    setEdit(false);
+    setEditMode(false);
   };
 
   const handleSaveName = (e: React.MouseEvent) => {
@@ -71,22 +71,14 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
         <ChatIcon />
       </span>
       <span className="relative grow">
-        {edit ? (
+        {editMode ? (
           <RowInput
             name={name}
             inputRef={inputRef}
             renameChat={renameChat}
-            editOff={() => setEdit(false)}
+            editOff={() => setEditMode(false)}
           />
         ) : (
-          // <input
-          //   autoFocus
-          //   ref={inputRef}
-          //   className="bg-gray_light w-full px-1  ring-0 outline-none focus:ring-0 rounded "
-          //   type="text"
-          //   defaultValue={name}
-          //   onKeyDown={handleKeyPress}
-          // />
           <React.Fragment>
             <p className="text-ellipsis overflow-hidden break-all h-6 inline-flex capitalize  px-1">
               {name}
@@ -101,20 +93,32 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
           </React.Fragment>
         )}
       </span>
-      <span className="text-gray-300 inline-flex items-center gap-2">
-        {edit ? (
-          <span className="hover:text-white" onClick={handleSaveName}>
-            <SaveEditIcon />
-          </span>
-        ) : (
-          <span className="hover:text-white" onClick={toggleEditModeOn}>
-            <EditIcon />
-          </span>
-        )}
-        <span className="hover:text-white" onClick={handleDelete}>
-          <TrashIcon />
+      {active && (
+        <span className="text-gray_icons flex items-center">
+          {editMode ? (
+            <div className="inline-flex items-center gap-2">
+              <span className="hover:text-white" onClick={handleSaveName}>
+                <CheckIcon className="hover:text-white h-[1.1rem] w-[1.1rem]" />
+              </span>
+              <span
+                className="hover:text-white"
+                onClick={() => setEditMode(false)}
+              >
+                <CloseIcon size={5} />
+              </span>
+            </div>
+          ) : (
+            <div className="inline-flex items-center gap-2">
+              <span className="hover:text-white" onClick={switchEditModeOn}>
+                <EditIcon />
+              </span>
+              <span className="hover:text-white" onClick={handleDelete}>
+                <TrashIcon />
+              </span>
+            </div>
+          )}
         </span>
-      </span>
+      )}
     </Link>
   );
 };

@@ -14,6 +14,7 @@ const RowInput = ({ name, inputRef, renameChat, editOff }: RowInputProps) => {
   };
 
   useClickOutside(inputRef, editOff);
+
   return (
     <input
       autoFocus

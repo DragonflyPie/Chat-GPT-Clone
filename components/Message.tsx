@@ -29,11 +29,11 @@ const Message = ({ message, isLast, chatId }: MessageProps) => {
   const messageRef = useRef<HTMLDivElement>(null);
   const chatGPT = content.user.name === "chatGPT";
 
-  useEffect(() => {
-    if (isLast) {
-      messageRef.current?.scrollIntoView();
-    }
-  }, [isLast, text]);
+  // useEffect(() => {
+  //   if (isLast) {
+  //     messageRef.current?.scrollIntoView();
+  //   }
+  // }, [isLast, text]);
 
   return (
     <div

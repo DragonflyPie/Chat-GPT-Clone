@@ -14,14 +14,22 @@ import Loader from "./Loader";
 import Message from "./Message";
 import { QuerySnapshot } from "firebase/firestore";
 import { DocumentData } from "@firebase/firestore-types";
+import Spinner from "./Spinner";
+import InfoBlock from "./InfoBlock";
 
 interface ChatMessagesProps {
   chatId: string;
   messages: QuerySnapshot<DocumentData> | undefined;
   loading: boolean;
+  updateValue: (text: string) => void;
 }
 
-const ChatMessages = ({ chatId, messages, loading }: ChatMessagesProps) => {
+const ChatMessages = ({
+  chatId,
+  messages,
+  loading,
+  updateValue,
+}: ChatMessagesProps) => {
   const { data: session } = useSession();
 
   const user = session?.user?.email;
@@ -35,18 +43,13 @@ const ChatMessages = ({ chatId, messages, loading }: ChatMessagesProps) => {
   }, [messages]);
 
   if (loading) {
-    return (
-      <div className=" flex flex-col justify-center items-center pt-[20vh] pr-10 text-white gap-8 ">
-        <Loader text="Loading messages" />
-        <ArrowPathIcon className="w-8 h-8 animate-spin" />
-      </div>
-    );
+    return <Spinner />;
   }
 
   return (
-    <div className="h-[calc(100vh-7.5rem)] md:h-[calc(100vh-5rem)] overflow-y-auto">
+    <div className="overflow-y-scroll grow">
       {messages?.docs.length ? (
-        <div className="flex overflow-y-auto flex-col">
+        <div className="flex flex-col py-4">
           {messages.docs.map((message, index) => (
             <Message
               key={message.id}
@@ -59,10 +62,7 @@ const ChatMessages = ({ chatId, messages, loading }: ChatMessagesProps) => {
           <div className="" ref={messagesEndRef}></div>
         </div>
       ) : (
-        <div className="flex flex-col h-full text-white pt-[20vh] pb-10 items-center justify-between">
-          <h2 className="">No messages yet.</h2>
-          <ArrowDownCircleIcon className="w-6 h-6 animate-bounce" />
-        </div>
+        <InfoBlock updateValue={updateValue} />
       )}
     </div>
   );
