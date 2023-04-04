@@ -25,13 +25,13 @@ const Chat = ({ chatId }: ChatProps) => {
     email,
   });
 
-  useEffect(() => {
-    if (hideSidebar !== undefined) {
-      hideSidebar();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (hideSidebar !== undefined) {
+  //     hideSidebar();
+  //   }
+  // }, []);
   return (
-    <div className="flex flex-col justify-between h-full">
+    <div className="flex h-full flex-col justify-between">
       {chatId ? (
         <ChatMessages
           chatId={chatId}

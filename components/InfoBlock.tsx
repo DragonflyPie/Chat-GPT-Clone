@@ -19,7 +19,7 @@ const InfoBlock = ({ updateValue }: InfoBlockProps) => {
     updateValue(buttonText);
   };
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center overflow-auto px-6 pb-6 text-gray-100 md:grow md:gap-10 md:pt-48">
+    <div className="flex h-full w-full flex-col items-center justify-center overflow-auto px-6 pb-6 text-gray-100 md:grow md:gap-10 ">
       <h1 className="py-10 text-4xl font-semibold md:pt-10">ChatGPT</h1>
       <div className="flex w-full flex-col gap-8 text-center md:max-w-2xl md:flex-row lg:max-w-3xl">
         <div className="flex w-full flex-col items-center gap-5">
@@ -65,8 +65,6 @@ const InfoBlock = ({ updateValue }: InfoBlockProps) => {
           </ul>
         </div>
       </div>
-
-      <ArrowDownCircleIcon className="mt-auto hidden h-6 w-6 animate-bounce md:block" />
     </div>
   );
 };

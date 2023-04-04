@@ -11,10 +11,10 @@ const useClickOutside = <T extends HTMLElement = HTMLElement>(
       }
     };
 
-    document.addEventListener("click", handleClick);
+    document.addEventListener("click", handleClick, true);
 
     return () => {
-      document.removeEventListener("click", handleClick);
+      document.removeEventListener("click", handleClick, true);
     };
   }, [ref]);
 };

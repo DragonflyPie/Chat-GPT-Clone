@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession, signOut } from "next-auth/react";
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import NewChat from "./NewChat";
 import ChatRow from "./ChatRow";
 import Loader from "./Loader";
@@ -17,7 +17,6 @@ const Sidebar = () => {
   const { data: session } = useSession();
   const email = session?.user?.email;
 
-  const sidebarRef = useRef<HTMLDivElement>(null);
   const deleteRef = useRef<HTMLDivElement>(null);
   useClickOutside(deleteRef, () => setDeleteAllMode(false));
 
@@ -26,10 +25,7 @@ const Sidebar = () => {
   const empty = chats?.docs && chats.docs.length === 0;
 
   return (
-    <nav
-      ref={sidebarRef}
-      className="flex h-screen max-w-xs flex-col bg-dark_gray p-2 md:fixed md:w-[260px] "
-    >
+    <nav className="flex h-screen max-w-xs flex-col bg-dark_gray p-2 text-sm md:fixed md:w-[260px] ">
       <div className="flex grow flex-col gap-2">
         <NewChat />
         {loading ? (
