@@ -24,7 +24,7 @@ export default function useAutoNameChat({
       const chatData = chatSnap.data();
 
       if (chatData && !chatData.name && messages?.docs.length) {
-        const newName = messages.docs[0].data().text.trim().slice(0, 20);
+        const newName = messages.docs[0].data().text.trim().slice(0, 30);
         await updateDoc(docRef, { name: newName });
       }
     };

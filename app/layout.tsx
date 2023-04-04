@@ -24,6 +24,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className="text-small">
+        <header>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+        </header>
         <SidebarProvider>
           <SessionProvider session={session}>
             {!session ? (
@@ -35,7 +38,7 @@ export default async function RootLayout({
                   <div className="hidden md:flex">
                     <Sidebar />
                   </div>
-                  <div className="w-full flex flex-col md:pl-[260px] h-[calc(100vh-2.5rem)] md:h-screen bg-background">
+                  <div className="flex h-[calc(100vh-2.5rem)] w-full flex-col bg-background md:h-screen md:pl-[260px]">
                     {children}
                   </div>
                 </div>
