@@ -5,10 +5,9 @@ import ChatIcon from "./icons/ChatIcon";
 import EditIcon from "./icons/EditIcon";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import SaveEditIcon from "./icons/SaveEditIcon";
 import { deleteChat, nameChat } from "../lib/firebaseUtils";
 import RowInput from "./RowInput";
-import { ArrowDownCircleIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { CheckIcon } from "@heroicons/react/24/outline";
 import CloseIcon from "./icons/CloseIcon";
 
 interface ChatRowProps {
@@ -40,16 +39,14 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
     setMode("default");
   };
 
-  const saveChanges = () => {
+  const saveChanges = (e: React.MouseEvent<HTMLSpanElement>) => {
+    e.preventDefault();
     if (mode === "edit") {
       renameChat();
     } else {
       if (!email || !id) return;
       deleteChat({ email, id });
-
-      if (active) {
-        router.push("/");
-      }
+      active && router.push("/");
     }
   };
 
