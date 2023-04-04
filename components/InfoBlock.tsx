@@ -15,11 +15,10 @@ interface InfoBlockProps {
 const InfoBlock = ({ updateValue }: InfoBlockProps) => {
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.target as HTMLButtonElement;
-    updateValue(button.innerText);
-    // updateValue(e.currentTarget.value);
+    const buttonText = button.innerText.slice(1, -1);
+    updateValue(buttonText);
   };
   return (
-    // <div className="w-full flex flex-col px-6 text-gray-100 items-center justify-center pb-6 h-fu">
     <div className="flex flex-col md:grow justify-center items-center px-6 md:h-full text-gray-100 w-full pb-6 md:gap-10 md:pt-48">
       <h1 className="text-4xl font-semibold py-10 md:pt-10">ChatGPT</h1>
       <div className="flex flex-col md:flex-row text-center gap-8 md:max-w-2xl lg:max-w-3xl w-full">
@@ -34,7 +33,7 @@ const InfoBlock = ({ updateValue }: InfoBlockProps) => {
               onClick={handleClick}
               value="blabla"
             >
-              "Explain quantum computing in simple terms"
+              "Explain quantum computing in simple terms."
               <ArrowLongRightIcon className="inline-block w-4 h-4 ml-2 grow" />
             </button>
             <button
@@ -80,7 +79,6 @@ const InfoBlock = ({ updateValue }: InfoBlockProps) => {
       </div>
       <ArrowDownCircleIcon className="animate-bounce w-6 h-6 mt-auto" />
     </div>
-    // </div>
   );
 };
 

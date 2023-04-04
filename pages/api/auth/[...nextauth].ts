@@ -8,10 +8,10 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "username", type: "text", placeholder: "Guest" },
-        password: { label: "password", type: "password" },
+        // username: { label: "username", type: "text", placeholder: "Guest" },
+        // password: { label: "password", type: "password" },
       },
-      authorize: (credentials) => {
+      authorize: () => {
         return {
           id: "guest",
           email: "guest",

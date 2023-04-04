@@ -18,7 +18,7 @@ interface ChatRowProps {
 
 const ChatRow = ({ id, name }: ChatRowProps) => {
   const [active, setActive] = useState(false);
-  const [editMode, setEditMode] = useState(false);
+  const [mode, setMode] = useState<"default" | "edit" | "delete">("default");
 
   const path = usePathname();
   const router = useRouter();
@@ -33,31 +33,24 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
     setActive(path.includes(id));
   }, [path]);
 
-  const switchEditModeOn = (e: React.MouseEvent<HTMLSpanElement>) => {
-    setEditMode(true);
-  };
-
-  const handleDelete = async (e: React.MouseEvent<HTMLSpanElement>) => {
-    e.preventDefault();
-    if (!email || !id) return;
-    deleteChat({ email, id });
-
-    if (active) {
-      router.push("/");
-    }
-  };
-
   const renameChat = () => {
     const name = inputRef.current?.value;
     name && nameChat({ name, id, email });
 
-    setEditMode(false);
+    setMode("default");
   };
 
-  const handleSaveName = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    renameChat();
+  const saveChanges = () => {
+    if (mode === "edit") {
+      renameChat();
+    } else {
+      if (!email || !id) return;
+      deleteChat({ email, id });
+
+      if (active) {
+        router.push("/");
+      }
+    }
   };
 
   return (
@@ -68,15 +61,21 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
       }`}
     >
       <span className="">
-        <ChatIcon />
+        {mode === "default" ? (
+          <ChatIcon />
+        ) : mode === "edit" ? (
+          <EditIcon />
+        ) : (
+          <TrashIcon />
+        )}
       </span>
       <span className="relative grow">
-        {editMode ? (
+        {mode === "edit" ? (
           <RowInput
             name={name}
             inputRef={inputRef}
             renameChat={renameChat}
-            editOff={() => setEditMode(false)}
+            editOff={() => setMode("default")}
           />
         ) : (
           <React.Fragment>
@@ -95,25 +94,31 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
       </span>
       {active && (
         <span className="text-gray_icons flex items-center">
-          {editMode ? (
+          {mode === "default" ? (
             <div className="inline-flex items-center gap-2">
-              <span className="hover:text-white" onClick={handleSaveName}>
-                <CheckIcon className="hover:text-white h-[1.1rem] w-[1.1rem]" />
+              <span
+                className="hover:text-white"
+                onClick={() => setMode("edit")}
+              >
+                <EditIcon />
               </span>
               <span
                 className="hover:text-white"
-                onClick={() => setEditMode(false)}
+                onClick={() => setMode("delete")}
               >
-                <CloseIcon size={5} />
+                <TrashIcon />
               </span>
             </div>
           ) : (
             <div className="inline-flex items-center gap-2">
-              <span className="hover:text-white" onClick={switchEditModeOn}>
-                <EditIcon />
+              <span className="hover:text-white" onClick={saveChanges}>
+                <CheckIcon className="hover:text-white h-[1.1rem] w-[1.1rem]" />
               </span>
-              <span className="hover:text-white" onClick={handleDelete}>
-                <TrashIcon />
+              <span
+                className="hover:text-white"
+                onClick={() => setMode("default")}
+              >
+                <CloseIcon size={5} />
               </span>
             </div>
           )}

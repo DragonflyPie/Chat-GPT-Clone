@@ -25,24 +25,25 @@ interface NameChatProps {
   name: string;
 }
 
-interface DeleteCollectionProps {
-  collectionRef: CollectionReference<DocumentData>;
-  batchSize: number;
+interface CreateChatProps {
+  email: string | null | undefined;
+  name?: string;
 }
-
-export const createChat = async (email: string | null | undefined) => {
+export const createChat = async ({ email, name }: CreateChatProps) => {
   if (!email) return;
 
-  const doc = await addDoc(collection(db, "users", email, "chats"), {
-    userId: email,
-    createdAt: serverTimestamp(),
-  });
+  const newChat = name
+    ? { userId: email, createdAt: serverTimestamp(), name: name }
+    : {
+        userId: email,
+        createdAt: serverTimestamp(),
+      };
+
+  const doc = await addDoc(collection(db, "users", email, "chats"), newChat);
   return doc.id;
 };
 
 export const deleteChat = async ({ email, id }: DeleteChatProps) => {
-  if (!email) return;
-
   const docRef = doc(db, "users", email, "chats", id);
   await deleteDoc(docRef);
 };

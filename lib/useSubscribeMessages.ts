@@ -23,24 +23,20 @@ export default function useFirebaseMessages({
 
   useEffect(() => {
     if (!email) return;
-    setLoading(true);
+    if (chatId) {
+      setLoading(true);
 
-    const q = chatId
-      ? query(
-          collection(db, "users", email, "chats", chatId, "messages"),
-          orderBy("createdAt", "asc")
-        )
-      : query(
-          collection(db, "users", email, "chats"),
-          orderBy("createdAt", "asc")
-        );
+      const q = query(
+        collection(db, "users", email, "chats", chatId, "messages"),
+        orderBy("createdAt", "asc")
+      );
 
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      setData(querySnapshot);
-      setLoading(false);
-    });
-
-    return unsubscribe;
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        setData(querySnapshot);
+        setLoading(false);
+      });
+      return unsubscribe;
+    }
   }, [chatId, email, db]);
 
   return { loading, data };

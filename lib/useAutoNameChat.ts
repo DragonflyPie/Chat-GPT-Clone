@@ -4,15 +4,20 @@ import { Session } from "next-auth";
 import React, { useEffect } from "react";
 import { db } from "../firebase";
 
-interface UseNameChatProps {
+interface UseAutoNameChatProps {
   email: string | undefined | null;
   id: string;
   messages?: QuerySnapshot<DocumentData>;
 }
 
-export default function useNameChat({ email, messages, id }: UseNameChatProps) {
+export default function useAutoNameChat({
+  email,
+  messages,
+  id,
+}: UseAutoNameChatProps) {
   useEffect(() => {
     if (!email || !messages) return;
+
     const getName = async () => {
       const docRef = doc(db, "users", email, "chats", id);
       const chatSnap = await getDoc(docRef);

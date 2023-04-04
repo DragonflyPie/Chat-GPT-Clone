@@ -18,7 +18,7 @@ const NewChat = ({ mobile }: NewChatProps) => {
   const email = session?.user?.email;
 
   const handleCreate = async () => {
-    const newChatId = await createChat(email);
+    const newChatId = await createChat({ email });
 
     router.push(`/chat/${newChatId}`);
   };

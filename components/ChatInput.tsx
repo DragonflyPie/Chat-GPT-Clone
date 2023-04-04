@@ -40,7 +40,10 @@ const ChatInput = ({
 
     let id;
     if (!chatId) {
-      id = await createChat(user?.email);
+      id = await createChat({
+        email: user?.email,
+        name: value.trim().slice(0, 20),
+      });
       router.push(`/chat/${id}`);
     } else {
       id = chatId;

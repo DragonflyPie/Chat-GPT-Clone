@@ -1,17 +1,7 @@
-"use client";
-
-import { useSession } from "next-auth/react";
-import useMainPage from "../lib/useMainPage";
-import Spinner from "../components/Spinner";
+import Chat from "../components/Chat";
 
 const Home = () => {
-  const { data: session } = useSession();
-  const email = session?.user?.email;
-  const { loading } = useMainPage(email);
-
-  if (loading) {
-    return <Spinner />;
-  }
+  return <Chat />;
 };
 
 export default Home;

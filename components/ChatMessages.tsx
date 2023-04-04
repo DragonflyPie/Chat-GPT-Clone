@@ -7,8 +7,8 @@ import {
 import { useSession } from "next-auth/react";
 
 import React, { useEffect, useRef } from "react";
-import useSubscribeFirebase from "../lib/useSubscribeFirebase";
-import useAutoNameChat from "../lib/useNameChat";
+import useSubscribeFirebase from "../lib/useSubscribeMessages";
+import useAutoNameChat from "../lib/useAutoNameChat";
 import Loader from "./Loader";
 
 import Message from "./Message";

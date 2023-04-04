@@ -6,10 +6,11 @@ import React, { useRef } from "react";
 import NewChat from "./NewChat";
 import ChatRow from "./ChatRow";
 import Loader from "./Loader";
-import useSubscribeFirebase from "../lib/useSubscribeFirebase";
+import useSubscribeChats from "../lib/useSubscribeChats";
 import LogOutIcon from "./icons/LogOutIcon";
 import TrashIcon from "./icons/TrashIcon";
 import { deleteAllChats } from "../lib/firebaseUtils";
+import { useRouter } from "next/navigation";
 
 const Sidebar = () => {
   const { data: session } = useSession();
@@ -17,7 +18,7 @@ const Sidebar = () => {
 
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  const { data: chats, loading } = useSubscribeFirebase({ email });
+  const { data: chats, loading } = useSubscribeChats({ email });
 
   return (
     <nav
