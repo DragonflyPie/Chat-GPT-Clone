@@ -28,16 +28,16 @@ const Sidebar = () => {
   return (
     <nav
       ref={sidebarRef}
-      className="bg-dark_gray flex flex-col h-screen max-w-xs p-2 md:w-[260px] md:fixed "
+      className="flex h-screen max-w-xs flex-col bg-dark_gray p-2 md:fixed md:w-[260px] "
     >
-      <div className="flex flex-col gap-2 grow">
+      <div className="flex grow flex-col gap-2">
         <NewChat />
         {loading ? (
-          <div className="flex w-full justify-center items-center text-white pt-20">
+          <div className="flex w-full items-center justify-center pt-20 text-white">
             <Loader text="Loading chats" />
           </div>
         ) : (
-          <div className="flex flex-col w-full gap-2 overflow-y-auto max-h-[calc(100vh-15rem)]">
+          <div className="flex max-h-[calc(100vh-15rem)] w-full flex-col gap-2 overflow-y-auto">
             {chats?.docs.map((chat) => (
               <ChatRow
                 key={chat.id}
@@ -51,7 +51,7 @@ const Sidebar = () => {
       <div className="flex flex-col justify-start gap-3 border-t border-white/20 py-2">
         {!empty && !deleteAllMode ? (
           <div
-            className="text-white inline-flex gap-2 p-3 rounded cursor-pointer group items-center  hover:bg-gray_hover"
+            className="group inline-flex cursor-pointer items-center gap-2 rounded p-3 text-white  hover:bg-gray_hover"
             onClick={() => setDeleteAllMode(true)}
           >
             <TrashIcon /> Delete all conversations
@@ -59,7 +59,7 @@ const Sidebar = () => {
         ) : !empty && deleteAllMode ? (
           <div
             ref={deleteRef}
-            className="text-white inline-flex gap-2 p-3 rounded cursor-pointer group items-center  hover:bg-gray_hover"
+            className="group inline-flex cursor-pointer items-center gap-2 rounded p-3 text-white  hover:bg-gray_hover"
             onClick={() => deleteAllChats(email)}
           >
             <CheckIcon className="h-4 w-4" /> Confirm delete all
@@ -67,7 +67,7 @@ const Sidebar = () => {
         ) : null}
 
         <div
-          className="text-white inline-flex gap-2 p-3 rounded cursor-pointer group items-center  hover:bg-gray_hover"
+          className="group inline-flex cursor-pointer items-center gap-2 rounded p-3 text-white  hover:bg-gray_hover"
           onClick={() => signOut()}
         >
           <LogOutIcon /> Log Out

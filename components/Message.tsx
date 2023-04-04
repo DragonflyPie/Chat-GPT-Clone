@@ -1,8 +1,6 @@
 import { DocumentData } from "@firebase/firestore-types";
-import { doc, updateDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useRef, useState } from "react";
-import { db } from "../firebase";
+import React, { useRef } from "react";
 import useTypeMessage from "../lib/useTypeMessage";
 import { IMessage } from "../types";
 import OpenAi from "./icons/OpenAi";
@@ -29,22 +27,16 @@ const Message = ({ message, isLast, chatId }: MessageProps) => {
   const messageRef = useRef<HTMLDivElement>(null);
   const chatGPT = content.user.name === "chatGPT";
 
-  // useEffect(() => {
-  //   if (isLast) {
-  //     messageRef.current?.scrollIntoView();
-  //   }
-  // }, [isLast, text]);
-
   return (
     <div
       ref={messageRef}
-      className={`w-full flex justify-center ${
+      className={`flex w-full justify-center ${
         chatGPT && "bg-gray_light_message"
       }`}
     >
-      <div className="text-base gap-4 md:gap-6 md:max-w-2xl lg:max-w-2xl xl:max-w-3xl p-4 md:py-6 flex lg:px-0 m-auto text-gray-100 grow items-center">
+      <div className="m-auto flex grow items-center gap-4 p-4 text-base text-gray-100 md:max-w-2xl md:gap-6 md:py-6 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
         {chatGPT ? (
-          <div className="h-[30px] w-[30px] min-w-[30px] bg-green flex items-center justify-center rounded-sm">
+          <div className="flex h-[30px] w-[30px] min-w-[30px] items-center justify-center rounded-sm bg-green">
             <OpenAi />
           </div>
         ) : (

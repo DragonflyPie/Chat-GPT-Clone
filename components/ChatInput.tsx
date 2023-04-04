@@ -22,8 +22,6 @@ const ChatInput = ({
   value,
   updateValue,
 }: ChatInputProps) => {
-  // const [value, setValue] = useState("");
-
   const router = useRouter();
   const { data: session } = useSession();
   const user = session?.user;
@@ -74,14 +72,14 @@ const ChatInput = ({
   }, [value]);
 
   return (
-    <div className="w-full p-5 text-base flex bottom-0 justify-center bg-background border-t border-white/20 md:border-none">
+    <div className="bottom-0 flex w-full justify-center border-t border-white/20 bg-background p-5 text-base md:border-none">
       <form
         ref={formRef}
-        className=" gap-1 border-l-gray-900/50 text-white bg-gray_light rounded-md flex shadow-[0_0_15px_rgba(0,0,0,0.10)] md:max-w-3xl w-full "
+        className=" flex w-full gap-1 rounded-md border-l-gray-900/50 bg-gray_light text-white shadow-[0_0_15px_rgba(0,0,0,0.10)] md:max-w-3xl "
         onSubmit={handleSubmit}
         onClick={() => textareaRef.current?.focus()}
       >
-        <div className="flex grow pr-2 py-2 md:py-3 md:pl-3 ">
+        <div className="flex grow py-2 pr-2 md:py-3 md:pl-3 ">
           <textarea
             autoFocus={true}
             ref={textareaRef}
@@ -89,7 +87,7 @@ const ChatInput = ({
             tabIndex={0}
             onKeyDown={handleKeyPress}
             onChange={handleChange}
-            className="bg-transparent resize-none w-full overflow-y-hidden h-6 max-h-52 outline-none pl-2 pr-4"
+            className="h-6 max-h-52 w-full resize-none overflow-y-hidden bg-transparent pl-2 pr-4 outline-none"
             value={value}
             placeholder="Send a message..."
           />
@@ -99,7 +97,7 @@ const ChatInput = ({
           ) : (
             <button
               type="submit"
-              className="hover:bg-dark_gray p-1 rounded-md disabled:hover:bg-transparent disabled:text-text_disabled"
+              className="rounded-md p-1 hover:bg-dark_gray disabled:text-text_disabled disabled:hover:bg-transparent"
               disabled={!value}
             >
               <PaperAirplaneIcon className="h-4 w-4 -rotate-45" />

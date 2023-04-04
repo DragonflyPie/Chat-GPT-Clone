@@ -1,16 +1,8 @@
 "use client";
 
-import {
-  ArrowDownCircleIcon,
-  ArrowPathIcon,
-} from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
-
 import React, { useEffect, useRef } from "react";
-import useSubscribeFirebase from "../lib/useSubscribeMessages";
 import useAutoNameChat from "../lib/useAutoNameChat";
-import Loader from "./Loader";
-
 import Message from "./Message";
 import { QuerySnapshot } from "firebase/firestore";
 import { DocumentData } from "@firebase/firestore-types";
@@ -47,7 +39,7 @@ const ChatMessages = ({
   }
 
   return (
-    <div className="overflow-y-scroll grow">
+    <div className="grow overflow-y-scroll">
       {messages?.docs.length ? (
         <div className="flex flex-col py-4">
           {messages.docs.map((message, index) => (

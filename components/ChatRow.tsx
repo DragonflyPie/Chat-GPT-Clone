@@ -7,8 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { deleteChat, nameChat } from "../lib/firebaseUtils";
 import RowInput from "./RowInput";
-import { CheckIcon } from "@heroicons/react/24/outline";
-import CloseIcon from "./icons/CloseIcon";
+import ConfirmationIcons from "./ConfirmationIcons";
 
 interface ChatRowProps {
   id: string;
@@ -24,6 +23,8 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
 
   const { data: session } = useSession();
   const email = session?.user?.email;
+
+  const rowRef = useRef<HTMLAnchorElement>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -53,9 +54,10 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
   return (
     <Link
       href={`/chat/${id}`}
-      className={`text-gray-100 inline-flex gap-2 p-3 rounded group items-center ${
+      className={`group inline-flex items-center gap-2 rounded p-3 text-gray-100 ${
         active ? "bg-background hover:bg-background" : "hover:bg-gray_hover"
       }`}
+      ref={rowRef}
     >
       <span className="">
         {mode === "default" ? (
@@ -68,19 +70,14 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
       </span>
       <span className="relative grow">
         {mode === "edit" ? (
-          <RowInput
-            name={name}
-            inputRef={inputRef}
-            renameChat={renameChat}
-            editOff={() => setMode("default")}
-          />
+          <RowInput name={name} inputRef={inputRef} renameChat={renameChat} />
         ) : (
           <React.Fragment>
-            <p className="text-ellipsis overflow-hidden break-all h-6 inline-flex capitalize  px-1">
+            <p className="inline-flex h-6 overflow-hidden text-ellipsis break-all px-1  capitalize">
               {name}
             </p>
             <div
-              className={`absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l   ${
+              className={`absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l   ${
                 active
                   ? "from-background group-hover:from-background"
                   : "from-dark_gray group-hover:from-gray_hover"
@@ -90,7 +87,7 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
         )}
       </span>
       {active && (
-        <span className="text-gray_icons flex items-center">
+        <span className="flex items-center text-gray_icons">
           {mode === "default" ? (
             <div className="inline-flex items-center gap-2">
               <span
@@ -107,17 +104,11 @@ const ChatRow = ({ id, name }: ChatRowProps) => {
               </span>
             </div>
           ) : (
-            <div className="inline-flex items-center gap-2">
-              <span className="hover:text-white" onClick={saveChanges}>
-                <CheckIcon className="hover:text-white h-[1.1rem] w-[1.1rem]" />
-              </span>
-              <span
-                className="hover:text-white"
-                onClick={() => setMode("default")}
-              >
-                <CloseIcon size={5} />
-              </span>
-            </div>
+            <ConfirmationIcons
+              defaultModeOn={() => setMode("default")}
+              saveChanges={saveChanges}
+              rowRef={rowRef}
+            />
           )}
         </span>
       )}

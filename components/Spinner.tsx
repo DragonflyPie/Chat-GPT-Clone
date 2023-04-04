@@ -3,8 +3,8 @@ import React from "react";
 
 const Spinner = () => {
   return (
-    <div className=" flex flex-col grow justify-center items-center text-white gap-8 ">
-      <ArrowPathIcon className="w-8 h-8 animate-spin" />
+    <div className=" flex grow flex-col items-center justify-center gap-8 text-white ">
+      <ArrowPathIcon className="h-8 w-8 animate-spin" />
     </div>
   );
 };

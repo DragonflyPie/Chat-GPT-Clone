@@ -2,7 +2,7 @@ import React from "react";
 
 const InfoRow = ({ text = "Param Pam Pamdfgsdgsdgsdgsdg dg" }) => {
   return (
-    <div className="w-full bg-white/5 p-3 rounded-md text-sm grow">{text}</div>
+    <div className="w-full grow rounded-md bg-white/5 p-3 text-sm">{text}</div>
   );
 };
 

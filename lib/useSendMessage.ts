@@ -47,7 +47,6 @@ function useSendMessage({ user }: UseSendMessageProps) {
     const chatHistory = !messages
       ? []
       : messages?.docs.map((message) => {
-          console.log(message.data());
           return {
             role: message.data().user.name === "chatGPT" ? "assistant" : "user",
             content: message.data().text,

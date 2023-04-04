@@ -3,7 +3,6 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: NextAuthOptions = {
-  // Configure one or more authentication providers
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -24,10 +23,6 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GOOGLE_ID!,
       clientSecret: process.env.GOOGLE_SECRET!,
     }),
-    // ...add more providers here
   ],
-  pages: {
-    // signIn: "/auth/signIn",
-  },
 };
 export default NextAuth(authOptions);

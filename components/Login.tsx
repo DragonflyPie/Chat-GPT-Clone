@@ -6,22 +6,22 @@ import LogoIcon from "./icons/LogoIcon";
 
 const Login = () => {
   return (
-    <div className="h-screen w-full flex flex-col items-center justify-center text bg-background text-white gap-5">
+    <div className="text flex h-screen w-full flex-col items-center justify-center gap-5 bg-background text-white">
       <LogoIcon />
-      <div className="flex flex-col md:flex-row gap-10 w-full md:px-20 xl:px-[300px]">
-        <div className="flex flex-col justify-center items-center gap-4 flex-1 w-full">
+      <div className="flex w-full flex-col gap-10 md:flex-row md:px-20 xl:px-[300px]">
+        <div className="flex w-full flex-1 flex-col items-center justify-center gap-4">
           <p>Sign In with Google Account</p>
           <button
-            className="bg-green hover:bg-dark_green duration-150 transition-colors inline-flex border-transparent rounded border-1 py-3 px-2 leading-5 cursor-pointer"
+            className="border-1 inline-flex cursor-pointer rounded border-transparent bg-green py-3 px-2 leading-5 transition-colors duration-150 hover:bg-dark_green"
             onClick={() => signIn("google")}
           >
             Log In
           </button>
         </div>
-        <div className="flex flex-1 flex-col justify-center items-center gap-4">
+        <div className="flex flex-1 flex-col items-center justify-center gap-4">
           <p>Explore as Guest</p>
           <button
-            className="bg-green hover:bg-dark_green duration-150 transition-colors inline-flex border-transparent rounded border-1 py-3 px-2 leading-5 cursor-pointer"
+            className="border-1 inline-flex cursor-pointer rounded border-transparent bg-green py-3 px-2 leading-5 transition-colors duration-150 hover:bg-dark_green"
             onClick={() => signIn("credentials")}
           >
             Guest
