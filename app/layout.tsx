@@ -7,7 +7,6 @@ import Sidebar from "../components/Sidebar";
 import { authOptions } from "../pages/api/auth/[...nextauth]";
 import "../styles/globals.css";
 import SidebarProvider from "../context/sidebarContext";
-import ChatInput from "../components/ChatInput";
 
 export const metadata = {
   title: "ChatGPT Messenger",
