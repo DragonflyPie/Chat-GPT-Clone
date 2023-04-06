@@ -28,17 +28,29 @@ export default async function handler(
     res.status(400).json({ answer: "Please provide valid Chat ID" });
     return;
   }
+  try {
+    const response = await query({ chatHistory });
 
-  const response = await query({ chatHistory });
+    await adminDb
+      .collection("users")
+      .doc(userId!)
+      .collection("chats")
+      .doc(chatId)
+      .collection("messages")
+      .doc(messageId)
+      .update({ text: response });
 
-  await adminDb
-    .collection("users")
-    .doc(userId!)
-    .collection("chats")
-    .doc(chatId)
-    .collection("messages")
-    .doc(messageId)
-    .update({ text: response || "Chat GPT was unable to respond" });
+    res.status(200).json({ answer: "Ok" });
+  } catch (error) {
+    await adminDb
+      .collection("users")
+      .doc(userId!)
+      .collection("chats")
+      .doc(chatId)
+      .collection("messages")
+      .doc(messageId)
+      .update({ text: "Chat GPT was unable to respond" });
 
-  res.status(200).json({ answer: "Ok" });
+    res.status(500).json({ answer: "ChatGPT was unable to respond" });
+  }
 }
