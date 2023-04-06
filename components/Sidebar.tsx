@@ -23,6 +23,7 @@ const Sidebar = () => {
   useClickOutside(deleteRef, () => setDeleteAllMode(false));
 
   const deleteChats = () => {
+    setDeleteAllMode(false);
     deleteAllChats(email);
     router.push("/");
   };

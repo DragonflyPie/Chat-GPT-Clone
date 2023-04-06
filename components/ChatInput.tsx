@@ -59,6 +59,7 @@ const ChatInput = ({
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && e.shiftKey === false && e.ctrlKey === false) {
       e.preventDefault();
+      if (loading) return;
       formRef.current?.requestSubmit();
     }
   };
@@ -72,7 +73,7 @@ const ChatInput = ({
   }, [value]);
 
   return (
-    <div className="bottom-0 flex w-full justify-center border-t border-white/20 bg-background p-5 text-base md:border-none">
+    <div className="bottom-0 flex w-full justify-center border-t border-white/20 bg-background p-5 text-base md:border-none md:pb-10">
       <form
         ref={formRef}
         className=" flex w-full gap-1 rounded-md border-l-gray-900/50 bg-gray_light text-white shadow-[0_0_15px_rgba(0,0,0,0.10)] md:max-w-3xl "

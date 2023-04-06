@@ -10,7 +10,6 @@ interface UseChatNameProps {
 export default function useChatName({ email, chatId }: UseChatNameProps) {
   const [title, setTitle] = useState("");
   useEffect(() => {
-    console.log(chatId);
     if (!email || !chatId) return;
 
     const getChatName = async () => {
