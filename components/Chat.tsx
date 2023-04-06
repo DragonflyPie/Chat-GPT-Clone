@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import React, { useContext, useEffect, useState } from "react";
 import { SidebarContext } from "../context/sidebarContext";
+import useChatName from "../lib/useChatName";
 import useSubscribeMessages from "../lib/useSubscribeMessages";
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
@@ -19,19 +20,18 @@ const Chat = ({ chatId }: ChatProps) => {
   };
   const { data: session } = useSession();
   const email = session?.user?.email;
-  const { hideSidebar } = useContext(SidebarContext);
   const { data: messages, loading } = useSubscribeMessages({
     chatId,
     email,
   });
 
-  // useEffect(() => {
-  //   if (hideSidebar !== undefined) {
-  //     hideSidebar();
-  //   }
-  // }, []);
+  const { title } = useChatName({ email, chatId });
+  const chatTitle = title ? title : "New Chat";
+
   return (
     <div className="flex h-full flex-col justify-between">
+      <title>{chatTitle}</title>
+
       {chatId ? (
         <ChatMessages
           chatId={chatId}

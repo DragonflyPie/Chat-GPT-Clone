@@ -11,14 +11,21 @@ import TrashIcon from "./icons/TrashIcon";
 import { deleteAllChats } from "../lib/firebaseUtils";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import useClickOutside from "../lib/useClickOutside";
+import { useRouter } from "next/navigation";
 
 const Sidebar = () => {
   const [deleteAllMode, setDeleteAllMode] = useState(false);
   const { data: session } = useSession();
+  const router = useRouter();
   const email = session?.user?.email;
 
   const deleteRef = useRef<HTMLDivElement>(null);
   useClickOutside(deleteRef, () => setDeleteAllMode(false));
+
+  const deleteChats = () => {
+    deleteAllChats(email);
+    router.push("/");
+  };
 
   const { data: chats, loading } = useSubscribeChats({ email });
 
@@ -56,7 +63,7 @@ const Sidebar = () => {
           <div
             ref={deleteRef}
             className="group inline-flex cursor-pointer items-center gap-2 rounded p-3 text-white  hover:bg-gray_hover"
-            onClick={() => deleteAllChats(email)}
+            onClick={deleteChats}
           >
             <CheckIcon className="h-4 w-4" /> Confirm delete all
           </div>

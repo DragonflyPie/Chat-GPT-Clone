@@ -18,7 +18,7 @@ export default function useAutoNameChat({
   useEffect(() => {
     if (!email || !messages) return;
 
-    const getName = async () => {
+    const updateName = async () => {
       const docRef = doc(db, "users", email, "chats", id);
       const chatSnap = await getDoc(docRef);
       const chatData = chatSnap.data();
@@ -28,7 +28,7 @@ export default function useAutoNameChat({
         await updateDoc(docRef, { name: newName });
       }
     };
-    getName();
+    updateName();
   }, [db, email, messages]);
   return;
 }

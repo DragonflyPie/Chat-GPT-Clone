@@ -20,7 +20,7 @@ const Login = () => {
             <Image
               src={GoogleLogo}
               alt=""
-              width={38}
+              width={40}
               className="object-contain"
             />
             <button
@@ -52,7 +52,7 @@ const Login = () => {
               src={GuestLogo}
               alt=""
               width={40}
-              className="object-contain invert"
+              className="object-contain"
             />
             <button
               className="border-1 inline-flex w-28 cursor-pointer justify-center rounded border-transparent bg-green py-3 px-2 leading-5 transition-colors duration-150 hover:bg-dark_green"

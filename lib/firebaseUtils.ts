@@ -1,14 +1,10 @@
 import {
   addDoc,
   collection,
-  CollectionReference,
   deleteDoc,
   doc,
-  DocumentData,
   serverTimestamp,
   updateDoc,
-  limit,
-  orderBy,
   query,
   getDocs,
 } from "firebase/firestore";
