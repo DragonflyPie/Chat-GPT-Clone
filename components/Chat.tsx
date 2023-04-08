@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import React, { useContext, useEffect, useState } from "react";
 import { SidebarContext } from "../context/sidebarContext";
-import useChatName from "../lib/useChatName";
+import useGetChatName from "../lib/useGetChatName";
 import useSubscribeMessages from "../lib/useSubscribeMessages";
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
@@ -25,7 +25,7 @@ const Chat = ({ chatId }: ChatProps) => {
     email,
   });
 
-  const { title } = useChatName({ email, chatId });
+  const { title } = useGetChatName({ email, chatId });
   const chatTitle = title ? title : "New Chat";
 
   return (

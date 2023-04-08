@@ -5,14 +5,13 @@ import { useSession } from "next-auth/react";
 import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "./Loader";
-import useSendMessage from "../lib/useSendMessage";
 import { createChat } from "../lib/firebaseUtils";
 import { DocumentData } from "@firebase/firestore-types";
-import { QuerySnapshot } from "firebase/firestore";
+import useSubmitForm from "../lib/useSubmitForm";
 
 interface ChatInputProps {
   chatId?: string;
-  messages?: QuerySnapshot<DocumentData>;
+  messages: DocumentData[] | [];
   value: string;
   updateValue: (text: string) => void;
 }
@@ -26,9 +25,7 @@ const ChatInput = ({
   const { data: session } = useSession();
   const user = session?.user;
 
-  const { loading, sendMessage } = useSendMessage({
-    user,
-  });
+  const { sendMessage, loading, error } = useSubmitForm();
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -49,7 +46,8 @@ const ChatInput = ({
 
     const text = value;
     updateValue("");
-    await sendMessage({ chatId: id, text, messages });
+
+    await sendMessage({ text, messages, user, chatId: id });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -90,6 +88,7 @@ const ChatInput = ({
             onChange={handleChange}
             className="h-6 max-h-52 w-full resize-none overflow-y-hidden bg-transparent pl-2 pr-4 outline-none"
             value={value}
+            required
             placeholder="Send a message..."
           />
 

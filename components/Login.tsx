@@ -3,7 +3,6 @@
 import React from "react";
 import { signIn } from "next-auth/react";
 import LogoIcon from "./icons/LogoIcon";
-import Register from "./Register";
 import GithubLogo from "../public/github.png";
 import Image from "next/image";
 import GoogleLogo from "../public/google.png";

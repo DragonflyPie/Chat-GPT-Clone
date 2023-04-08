@@ -7,7 +7,7 @@ import { db } from "../firebase";
 interface UseAutoNameChatProps {
   email: string | undefined | null;
   id: string;
-  messages?: QuerySnapshot<DocumentData>;
+  messages?: DocumentData[];
 }
 
 export default function useAutoNameChat({
@@ -23,8 +23,8 @@ export default function useAutoNameChat({
       const chatSnap = await getDoc(docRef);
       const chatData = chatSnap.data();
 
-      if (chatData && !chatData.name && messages?.docs.length) {
-        const newName = messages.docs[0].data().text.trim().slice(0, 30);
+      if (chatData && !chatData.name && messages?.length) {
+        const newName = messages[0].data().text.trim().slice(0, 30);
         await updateDoc(docRef, { name: newName });
       }
     };

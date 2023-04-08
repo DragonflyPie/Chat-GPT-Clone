@@ -8,6 +8,8 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
+import { IMessage } from "../types";
+import { IChatGPTMessage } from "./OpenAIStream";
 
 interface UseFirebaseMessagesProps {
   email: string | null | undefined;
@@ -18,7 +20,7 @@ export default function useFirebaseMessages({
   email,
   chatId,
 }: UseFirebaseMessagesProps) {
-  const [data, setData] = useState<QuerySnapshot<DocumentData>>();
+  const [data, setData] = useState<DocumentData[] | []>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -32,7 +34,7 @@ export default function useFirebaseMessages({
       );
 
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        setData(querySnapshot);
+        setData(querySnapshot.docs);
         setLoading(false);
       });
       return unsubscribe;

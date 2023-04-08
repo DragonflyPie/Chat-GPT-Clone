@@ -8,6 +8,7 @@
   "dependencies": {
     "@firebase/firestore-types": "^2.5.1",
     "@heroicons/react": "^2.0.16",
+    "eventsource-parser": "^1.0.0",
     "firebase": "^9.17.2",
     "firebase-admin": "^11.5.0",
     "next": "latest",
@@ -17,8 +18,7 @@
     "prettier-plugin-tailwindcss": "^0.2.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-select": "^5.7.0",
-    "swr": "^2.1.0"
+    "react-select": "^5.7.0"
   },
   "devDependencies": {
     "@types/node": "18.11.3",

@@ -12,15 +12,19 @@ interface IMessage {
   };
 }
 
-interface ChatMessage {
-  user: string;
-  content: string;
-}
-
 type ChatHistory = Chatmessage[];
 
 interface IChat {
   createdAt: string;
   userId: string;
   messages?: IMessage[];
+}
+
+interface IPayload {
+  model: "gpt-3.5-turbo";
+  messages: ChatHistory;
+  temperature: number;
+  max_tokens: number;
+  stream: boolean;
+  n: number;
 }

@@ -7,18 +7,17 @@ interface UseChatNameProps {
   chatId: string | undefined | null;
 }
 
-export default function useChatName({ email, chatId }: UseChatNameProps) {
+export default function useGetChatName({ email, chatId }: UseChatNameProps) {
   const [title, setTitle] = useState("");
   useEffect(() => {
     if (!email || !chatId) return;
 
-    const getChatName = async () => {
+    (async () => {
       const chatRef = doc(db, "users", email, "chats", chatId);
       const chat = await getDoc(chatRef);
       const chatData = chat.data();
       setTitle(chatData?.name);
-    };
-    getChatName();
+    })();
   }, [chatId, email, db]);
 
   return { title };
