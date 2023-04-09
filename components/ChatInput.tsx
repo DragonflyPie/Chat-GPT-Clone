@@ -2,12 +2,19 @@
 
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
-import React, { SetStateAction, useEffect, useRef, useState } from "react";
+import React, {
+  SetStateAction,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useRouter } from "next/navigation";
 import Loader from "./Loader";
 import { createChat } from "../lib/firebaseUtils";
 import { DocumentData } from "@firebase/firestore-types";
 import useSubmitForm from "../lib/useSubmitForm";
+import { LoadingContext } from "../context/LoadingContext";
 
 interface ChatInputProps {
   chatId?: string;
@@ -25,7 +32,8 @@ const ChatInput = ({
   const { data: session } = useSession();
   const user = session?.user;
 
-  const { sendMessage, loading, error } = useSubmitForm();
+  const { sendMessage } = useSubmitForm();
+  const { loading } = useContext(LoadingContext);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const formRef = useRef<HTMLFormElement>(null);

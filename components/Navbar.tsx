@@ -4,17 +4,18 @@ import React, { useContext, useRef } from "react";
 import Sidebar from "./Sidebar";
 import MenuIcon from "./icons/MenuIcon";
 import CloseIcon from "./icons/CloseIcon";
-import { SidebarContext } from "../context/sidebarContext";
 
 import NewChat from "./NewChat";
 import useClickOutside from "../lib/useClickOutside";
+import { ISidebarContext, SidebarContext } from "../context/SidebarContext";
 
 const Navbar = () => {
-  const { showSidebar, hideSidebar, displaySidebar } =
-    useContext(SidebarContext);
+  const { isShown, hideSidebar, displaySidebar } = useContext(
+    SidebarContext
+  ) as ISidebarContext;
 
   const handler = () => {
-    hideSidebar && hideSidebar();
+    hideSidebar();
   };
 
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -37,12 +38,12 @@ const Navbar = () => {
 
       <div
         className={`fixed inset-0 z-20 bg-background_navbar bg-opacity-75 transition duration-1000 ${
-          showSidebar ? "animate-appear" : "hidden"
+          isShown ? "animate-appear" : "hidden"
         }  `}
       ></div>
       <div
         className={`fixed inset-0 z-40 transition-transform duration-700 ${
-          showSidebar ? "translate-x-0" : "-translate-x-full"
+          isShown ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="fixed z-40 w-full max-w-xs" ref={sidebarRef}>

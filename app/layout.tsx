@@ -6,7 +6,8 @@ import { SessionProvider } from "../components/SessionProvider";
 import Sidebar from "../components/Sidebar";
 import { authOptions } from "../pages/api/auth/[...nextauth]";
 import "../styles/globals.css";
-import SidebarProvider from "../context/sidebarContext";
+import SidebarProvider from "../context/SidebarContext";
+import LoadingProvider from "../context/LoadingContext";
 
 export const metadata = {
   title: "ChatGPT Messenger",
@@ -27,23 +28,25 @@ export default async function RootLayout({
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </header>
         <SidebarProvider>
-          <SessionProvider session={session}>
-            {!session ? (
-              <Login />
-            ) : (
-              <React.Fragment>
-                <Navbar />
-                <div className="flex">
-                  <div className="hidden md:flex">
-                    <Sidebar />
+          <LoadingProvider>
+            <SessionProvider session={session}>
+              {!session ? (
+                <Login />
+              ) : (
+                <React.Fragment>
+                  <Navbar />
+                  <div className="flex">
+                    <div className="hidden md:flex">
+                      <Sidebar />
+                    </div>
+                    <div className="flex h-[calc(100vh-2.5rem)] w-full flex-col bg-background md:h-screen md:pl-[260px]">
+                      {children}
+                    </div>
                   </div>
-                  <div className="flex h-[calc(100vh-2.5rem)] w-full flex-col bg-background md:h-screen md:pl-[260px]">
-                    {children}
-                  </div>
-                </div>
-              </React.Fragment>
-            )}
-          </SessionProvider>
+                </React.Fragment>
+              )}
+            </SessionProvider>
+          </LoadingProvider>
         </SidebarProvider>
       </body>
     </html>

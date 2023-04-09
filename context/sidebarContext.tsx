@@ -2,30 +2,30 @@
 
 import { createContext, useState } from "react";
 
-interface SidebarContextProps {
-  showSidebar: boolean;
-  hideSidebar?: () => void;
-  displaySidebar?: () => void;
+export interface ISidebarContext {
+  isShown: boolean;
+  hideSidebar: () => void;
+  displaySidebar: () => void;
 }
 
-export const SidebarContext = createContext<SidebarContextProps>({
-  showSidebar: false,
-});
+export const SidebarContext = createContext<ISidebarContext>({
+  isShown: false,
+} as ISidebarContext);
 
 const Provider = ({ children }: React.PropsWithChildren) => {
-  const [showSidebar, setShowSidebar] = useState(false);
+  const [isShown, setIsShown] = useState(false);
 
   const displaySidebar = () => {
-    setShowSidebar(true);
+    setIsShown(true);
   };
   const hideSidebar = () => {
-    setShowSidebar(false);
+    setIsShown(false);
   };
 
   return (
     <SidebarContext.Provider
       value={{
-        showSidebar,
+        isShown,
         displaySidebar,
         hideSidebar,
       }}

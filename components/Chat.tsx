@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import React, { useContext, useEffect, useState } from "react";
-import { SidebarContext } from "../context/sidebarContext";
+import { SidebarContext } from "../context/SidebarContext";
 import useGetChatName from "../lib/useGetChatName";
 import useSubscribeMessages from "../lib/useSubscribeMessages";
 import ChatInput from "./ChatInput";

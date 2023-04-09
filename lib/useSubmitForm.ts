@@ -6,7 +6,8 @@ import {
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { LoadingContext, ILoadingContext } from "../context/LoadingContext";
 import { db } from "../firebase";
 import { IMessage } from "../types";
 import { askChatGPT } from "./openAIUtils";
@@ -27,6 +28,10 @@ interface SendMessageProps {
 export default function useSubmitForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { toggleLoadingOn, toggleLoadingOff } = useContext(
+    LoadingContext
+  ) as ILoadingContext;
 
   const sendMessage = async ({
     messages,
@@ -51,7 +56,7 @@ export default function useSubmitForm() {
         throw new Error("No chat ID provided");
       }
 
-      setLoading(true);
+      toggleLoadingOn();
 
       const message: IMessage = {
         text: text.trim(),
@@ -108,8 +113,8 @@ export default function useSubmitForm() {
 
       setError(errorMessage);
     } finally {
-      setLoading(false);
+      toggleLoadingOff();
     }
   };
-  return { loading, error, sendMessage };
+  return { error, sendMessage };
 }
