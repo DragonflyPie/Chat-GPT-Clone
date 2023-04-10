@@ -34,7 +34,7 @@ const InfoBlock = ({ updateValue }: InfoBlockProps) => {
             />
             <InfoButton
               handleClick={handleClick}
-              text="Explain quantum computing in simple terms."
+              text="How many stars are in the sky?"
             />
             <InfoButton
               handleClick={handleClick}
